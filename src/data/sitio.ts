@@ -1,4 +1,6 @@
 export const SITIO = {
+  /** false = noindex en todo el sitio (mientras se elige la marca). Al cambiarlo a true, quita X-Robots-Tag de public/.htaccess. */
+  indexable: false,
   nombre: 'SacaCuentas',
   dominio: 'sacacuentas.isai-dev.com',
   lema: 'Calculadoras de dinero para México, explicadas paso a paso',
