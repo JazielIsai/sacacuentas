@@ -135,7 +135,8 @@ export function calcularFiniquito(e: EntradaFiniquito, v: ValoresAnuales, opts: 
   if (primaAntiguedadAplica(e.motivo, ant.aniosCompletos)) {
     const sm = zona === 'frontera' ? v.salarioMinimo.frontera : v.salarioMinimo.general;
     const tope = r2(sm * PRIMA_ANTIGUEDAD_TOPE_SM);
-    const base = opts.salarioBasePrima ?? sd;
+    // Art. 485: la base no puede ser menor al salario mínimo.
+    const base = Math.max(opts.salarioBasePrima ?? sd, sm);
     const salarioTopado = Math.min(base, tope);
     const diasPrima = r2(PRIMA_ANTIGUEDAD_DIAS_POR_ANIO * ant.aniosConFraccion);
     primaAnt = r2(diasPrima * salarioTopado);
@@ -224,7 +225,7 @@ export function calcularLiquidacion(e: EntradaLiquidacion, v: ValoresAnuales): R
     `La indemnización y la prima de antigüedad están exentas de ISR hasta 90 UMA por año de servicio (aprox. ${dinero(topeExento)} en tu caso, art. 93 fr. XIII LISR).`,
   ];
   if (!e.incluir20Dias) {
-    avisos.push('No se incluyeron los 20 días por año: proceden cuando el patrón se niega a reinstalarte o en los supuestos del art. 49 LFT. Actívalos si es tu caso.');
+    avisos.push('No se incluyeron los 20 días por año: proceden cuando el patrón queda eximido de reinstalarte (art. 49 LFT) o cuando tú rescindes por causa suya (arts. 51 y 52). Actívalos si es tu caso. El cálculo supone contrato por tiempo indeterminado.');
   }
 
   return { total, pasos, avisos, finiquito: fin, salarioIntegrado: sdi, indemnizacion3Meses: ind3, indemnizacion20Dias: ind20 };

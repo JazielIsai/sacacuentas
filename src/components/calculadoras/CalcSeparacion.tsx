@@ -111,7 +111,7 @@ export default function CalcSeparacion({ modo }: { modo: 'finiquito' | 'liquidac
                 checked={incluir20}
                 onChange={setIncluir20}
                 label="Incluir 20 días por año"
-                ayuda="Procede si el patrón se niega a reinstalarte o en los casos del art. 49 LFT. Lee la explicación abajo."
+                ayuda="Procede en los casos de los arts. 49 y 52 LFT. Lee la explicación abajo."
               />
             </div>
           )}

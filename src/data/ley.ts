@@ -45,7 +45,8 @@ export const PRIMA_ANTIGUEDAD_ANIOS_RENUNCIA = 15;
  * Pago mínimo de tarjeta de crédito — Banxico, Circular 13/2011 y modificaciones:
  * el mayor entre (a) 1.5% del saldo insoluto (sin intereses ni IVA) + intereses + IVA,
  * y (b) 1.25% del límite de crédito.
- * TODO(verificar): confirmar porcentajes vigentes en las disposiciones de Banxico.
+ * Porcentajes cotejados con el texto original (disp. 2.1) el 23-nov-2026; aplican desde el 4-ene-2013.
+ * TODO(verificar): cambios de la Circular 14/2014, que modificó la 13/2011.
  * Fuente: https://www.banxico.org.mx/marco-normativo/
  */
 export const PAGO_MINIMO_PCT_SALDO = 0.015;
