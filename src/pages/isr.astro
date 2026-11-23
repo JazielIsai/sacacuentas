@@ -1,0 +1,14 @@
+---
+import { getEntry, render } from 'astro:content';
+import Calculadora from '@/layouts/Calculadora.astro';
+import CalcISR from '@/components/calculadoras/CalcISR';
+
+const articulo = await getEntry('articulos', 'isr');
+if (!articulo) throw new Error('Falta src/content/articulos/isr.mdx');
+const { Content } = await render(articulo);
+---
+
+<Calculadora articulo={articulo}>
+  <CalcISR client:load />
+  <Content slot="articulo" />
+</Calculadora>

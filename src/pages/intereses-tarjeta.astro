@@ -1,0 +1,14 @@
+---
+import { getEntry, render } from 'astro:content';
+import Calculadora from '@/layouts/Calculadora.astro';
+import CalcTarjeta from '@/components/calculadoras/CalcTarjeta';
+
+const articulo = await getEntry('articulos', 'intereses-tarjeta');
+if (!articulo) throw new Error('Falta src/content/articulos/intereses-tarjeta.mdx');
+const { Content } = await render(articulo);
+---
+
+<Calculadora articulo={articulo}>
+  <CalcTarjeta client:load />
+  <Content slot="articulo" />
+</Calculadora>

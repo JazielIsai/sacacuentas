@@ -1,0 +1,58 @@
+---
+title: "Calculadora de ISR por sueldo 2026: cuánto te retienen"
+description: "Calcula el ISR que te retienen de tu sueldo mensual, quincenal o semanal con la tarifa del art. 96 y el subsidio para el empleo. Desglose paso a paso."
+h1: "Calculadora de ISR de tu sueldo"
+intro: "Escribe tu sueldo bruto y el periodo de pago para ver cuánto ISR te retienen, si te toca subsidio para el empleo y cuánto te queda."
+actualizado: 2026-11-19
+faq:
+  - pregunta: "¿Qué es el ISR?"
+    respuesta: "El Impuesto Sobre la Renta. Si eres asalariado, tu patrón lo calcula y lo retiene de tu sueldo cada periodo de pago, y lo entera al SAT."
+  - pregunta: "¿Qué es el subsidio para el empleo?"
+    respuesta: "Un apoyo que reduce el ISR de quienes ganan menos. Desde 2024 se calcula como un porcentaje de la UMA mensual y solo aplica hasta cierto nivel de ingreso. Si el subsidio es mayor que tu ISR, la retención queda en cero, pero ya no te entregan la diferencia en efectivo."
+  - pregunta: "¿Por qué mi recibo muestra un ISR distinto?"
+    respuesta: "Puede deberse a otros ingresos gravables (horas extra, bonos, vales), a que tu patrón calcule con otra periodicidad, o a ajustes anuales. Esta calculadora considera solo el sueldo que escribes."
+  - pregunta: "¿La calculadora incluye el IMSS?"
+    respuesta: "No. Las cuotas obreras del IMSS son otra deducción aparte del ISR. El 'te queda' es tu sueldo menos ISR, antes de IMSS, INFONAVIT u otros descuentos."
+  - pregunta: "¿Qué es la tasa efectiva?"
+    respuesta: "El porcentaje real de tu sueldo que se va en ISR. Siempre es menor que el porcentaje del renglón de la tabla, porque ese porcentaje solo se aplica al excedente."
+---
+import { getValores } from '@/data';
+import { dinero } from '@/lib/calculos/comunes';
+export const v = getValores();
+
+## ¿Cómo se calcula el ISR de tu sueldo?
+
+Tu patrón usa la **tarifa del artículo 96 de la Ley del ISR**. Es una tabla progresiva: cada renglón tiene un límite inferior, una cuota fija y un porcentaje que se aplica **solo a lo que excede** ese límite.
+
+1. Busca el renglón donde cae tu sueldo.
+2. Resta el **límite inferior** a tu sueldo: eso es el **excedente**.
+3. Multiplica el excedente por el **porcentaje** del renglón.
+4. Suma la **cuota fija**: eso es el ISR antes de subsidio.
+5. Si tu ingreso mensual no pasa de **{dinero(v.subsidioEmpleo.limiteIngresoMensual)}**, resta el **subsidio para el empleo** ({v.subsidioEmpleo.porcentajeUmaMensual}% de la UMA mensual, unos {dinero((v.uma.mensual * v.subsidioEmpleo.porcentajeUmaMensual) / 100)} al mes).
+
+## Tarifa mensual de referencia
+
+<table>
+  <thead>
+    <tr><th>Límite inferior</th><th>Límite superior</th><th>Cuota fija</th><th>% sobre excedente</th></tr>
+  </thead>
+  <tbody>
+    {v.isr.tarifaMensual.map((r) => (
+      <tr>
+        <td>{dinero(r.limiteInferior)}</td>
+        <td>{r.limiteSuperior === Infinity ? 'En adelante' : dinero(r.limiteSuperior)}</td>
+        <td>{dinero(r.cuotaFija)}</td>
+        <td>{r.porcentaje.toFixed(2)}%</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+Las tarifas quincenal y semanal se obtienen dividiendo la mensual entre 30.4 y multiplicando por los días del periodo, igual que en el Anexo 8 de la Resolución Miscelánea Fiscal. Puede haber diferencias de centavos por redondeo.
+
+## Fundamento legal
+
+- **Art. 94 LISR**: qué ingresos se consideran salarios.
+- **Art. 96 LISR**: retención mensual y tarifa.
+- **Anexo 8 de la RMF**: tarifas para cada periodo de pago.
+- **Decreto de subsidio para el empleo** publicado en el DOF.

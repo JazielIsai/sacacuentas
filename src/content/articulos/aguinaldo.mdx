@@ -1,0 +1,59 @@
+---
+title: "Calculadora de aguinaldo 2026: cuánto te toca y cuánto paga ISR"
+description: "Calcula tu aguinaldo 2026 completo o proporcional según la Ley Federal del Trabajo. Incluye parte exenta, ISR estimado y el desglose paso a paso."
+h1: "Calculadora de aguinaldo 2026"
+intro: "Escribe tu salario y tu fecha de ingreso para ver cuánto aguinaldo te toca este año, si es proporcional y cuánto se queda el ISR."
+actualizado: 2026-11-19
+faq:
+  - pregunta: "¿Cuándo me tienen que pagar el aguinaldo?"
+    respuesta: "A más tardar el 20 de diciembre de cada año, según el artículo 87 de la Ley Federal del Trabajo."
+  - pregunta: "¿Cuántos días de aguinaldo me tocan por ley?"
+    respuesta: "Mínimo 15 días de salario por año completo trabajado. Tu contrato o el contrato colectivo pueden darte más, pero nunca menos."
+  - pregunta: "¿Me toca aguinaldo si no he cumplido un año?"
+    respuesta: "Sí. Si trabajaste solo una parte del año, te corresponde la parte proporcional a los días trabajados, sin importar que sigas o no en la empresa."
+  - pregunta: "¿El aguinaldo paga impuestos?"
+    respuesta: "Está exento de ISR hasta 30 veces la UMA diaria (art. 93 fr. XIV de la Ley del ISR). Sobre lo que exceda ese monto se retiene ISR."
+  - pregunta: "¿Qué hago si no me pagan el aguinaldo?"
+    respuesta: "Puedes acudir a la PROFEDET, que asesora y representa a trabajadores de forma gratuita, o presentar una queja ante la autoridad laboral. Tienes un año para reclamarlo."
+  - pregunta: "¿Con qué salario se calcula?"
+    respuesta: "Con el salario base diario (cuota diaria), sin incluir horas extra ni bonos ocasionales, salvo que tu contrato diga otra cosa."
+---
+import { getValores } from '@/data';
+import { dinero } from '@/lib/calculos/comunes';
+export const v = getValores();
+
+## ¿Qué es el aguinaldo?
+
+El aguinaldo es una **prestación obligatoria** que todo patrón debe pagar a sus trabajadores una vez al año. En México lo regula el **artículo 87 de la Ley Federal del Trabajo (LFT)**: equivale a por lo menos **15 días de salario** y debe pagarse **antes del 20 de diciembre**.
+
+## ¿Quién tiene derecho?
+
+Todas las personas trabajadoras con una relación laboral subordinada: de base, eventuales, de confianza, por obra o tiempo determinado, trabajadoras del hogar y quienes trabajan a distancia. No importa cuánto tiempo lleves: si no completaste el año, te toca la **parte proporcional**.
+
+Quienes trabajan por honorarios (sin relación laboral) no tienen derecho a aguinaldo por ley.
+
+## ¿Cómo se calcula?
+
+1. **Salario diario.** Si te pagan por mes, se divide entre 30. Si es semanal, entre 7 (art. 89 LFT).
+2. **Días que te tocan.** Con el año completo, 15 días (o los que diga tu contrato). Si no, se hace la proporción:
+
+   > días de aguinaldo × días trabajados en el año ÷ 365
+
+3. **Aguinaldo bruto** = días que te tocan × salario diario.
+4. **ISR.** Los primeros **30 UMA** están exentos. Con la UMA de referencia de {dinero(v.uma.diaria)} diarios, el tope exento es de **{dinero(v.uma.diaria * 30)}**. Sobre lo que sobre, se retiene ISR.
+
+### Ejemplo
+
+Ganas $12,000 al mes y trabajaste todo el año:
+
+| Concepto | Cálculo | Monto |
+|---|---|---|
+| Salario diario | $12,000 ÷ 30 | $400.00 |
+| Aguinaldo | 15 × $400 | $6,000.00 |
+
+## Fundamento legal
+
+- **Art. 87 LFT**: derecho al aguinaldo, mínimo 15 días, pago antes del 20 de diciembre y parte proporcional.
+- **Art. 89 LFT**: cómo obtener el salario diario.
+- **Art. 93 fr. XIV LISR**: exención de ISR hasta 30 UMA.
+- **Art. 96 LISR**: tarifa para calcular la retención.

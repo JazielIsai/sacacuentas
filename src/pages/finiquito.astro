@@ -1,0 +1,14 @@
+---
+import { getEntry, render } from 'astro:content';
+import Calculadora from '@/layouts/Calculadora.astro';
+import CalcSeparacion from '@/components/calculadoras/CalcSeparacion';
+
+const articulo = await getEntry('articulos', 'finiquito');
+if (!articulo) throw new Error('Falta src/content/articulos/finiquito.mdx');
+const { Content } = await render(articulo);
+---
+
+<Calculadora articulo={articulo}>
+  <CalcSeparacion client:load modo="finiquito" />
+  <Content slot="articulo" />
+</Calculadora>

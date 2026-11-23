@@ -1,0 +1,59 @@
+---
+title: "Calculadora de finiquito 2026: cuánto te toca al renunciar"
+description: "Calcula tu finiquito 2026 con la Ley Federal del Trabajo: aguinaldo y vacaciones proporcionales, prima vacacional y prima de antigüedad. Desglose paso a paso."
+h1: "Calculadora de finiquito"
+intro: "Si renunciaste o terminó tu trabajo, el finiquito es lo que te deben sí o sí. Calcula aguinaldo y vacaciones proporcionales, prima vacacional y, si aplica, prima de antigüedad."
+actualizado: 2026-11-19
+faq:
+  - pregunta: "¿Cuál es la diferencia entre finiquito y liquidación?"
+    respuesta: "El finiquito son las prestaciones que ya ganaste y te corresponden siempre, sin importar cómo termine la relación laboral. La liquidación es el finiquito más una indemnización, que solo procede en un despido injustificado."
+  - pregunta: "¿Si renuncio me toca finiquito?"
+    respuesta: "Sí. Renunciar no te quita el derecho a cobrar los días trabajados, el aguinaldo y las vacaciones proporcionales, ni la prima vacacional."
+  - pregunta: "¿Cuándo me toca prima de antigüedad si renuncio?"
+    respuesta: "Solo si tienes 15 años o más de servicio (art. 162 fr. III LFT). Si te despiden, justificada o injustificadamente, te toca sin importar tu antigüedad."
+  - pregunta: "¿Cuánto tiempo tienen para pagarme el finiquito?"
+    respuesta: "La ley no fija un plazo exacto, pero lo usual es que se pague al terminar la relación. Tienes un año para reclamar las prestaciones (art. 516 LFT)."
+  - pregunta: "¿Tengo que firmar el finiquito?"
+    respuesta: "Revisa que los montos sean correctos antes de firmar. Si no estás de acuerdo, puedes no firmar y pedir asesoría gratuita en la PROFEDET."
+  - pregunta: "¿El finiquito paga ISR?"
+    respuesta: "Sí, cada concepto tiene sus propias reglas. El aguinaldo y la prima vacacional tienen montos exentos, y la prima de antigüedad está exenta hasta 90 UMA por año de servicio."
+---
+import { getValores } from '@/data';
+import { dinero } from '@/lib/calculos/comunes';
+export const v = getValores();
+
+## ¿Qué es el finiquito?
+
+Es el pago de **todo lo que ya ganaste y no te han pagado** cuando termina tu relación laboral, por cualquier motivo: renuncia, fin de contrato, despido justificado o mutuo acuerdo. No es un regalo ni una indemnización: es tu dinero.
+
+## ¿Qué incluye?
+
+| Concepto | Cómo se calcula | Fundamento |
+|---|---|---|
+| Salario pendiente | Días trabajados no pagados × salario diario | Art. 84 LFT |
+| Aguinaldo proporcional | 15 días × días trabajados en el año ÷ 365 | Art. 87 LFT |
+| Vacaciones proporcionales | Días del año de servicio en curso × días transcurridos ÷ 365 | Arts. 76 y 79 LFT |
+| Vacaciones no tomadas | Días pendientes de años anteriores | Art. 76 LFT |
+| Prima vacacional | 25% de lo que te toca por vacaciones | Art. 80 LFT |
+| Prima de antigüedad* | 12 días por año, con salario topado a 2 salarios mínimos | Art. 162 LFT |
+
+\* Con renuncia, solo si tienes **15 años o más**. En un despido te toca siempre.
+
+## El tope de la prima de antigüedad
+
+La prima de antigüedad se calcula con tu salario, pero **con un tope de dos veces el salario mínimo** (arts. 162, 485 y 486 LFT). Con los valores de referencia:
+
+- Resto del país: 2 × {dinero(v.salarioMinimo.general)} = **{dinero(v.salarioMinimo.general * 2)}** diarios.
+- Zona Libre de la Frontera Norte: 2 × {dinero(v.salarioMinimo.frontera)} = **{dinero(v.salarioMinimo.frontera * 2)}** diarios.
+
+## ¿Y si me despidieron sin causa?
+
+Entonces además del finiquito te corresponde una indemnización. Usa la [calculadora de liquidación](/liquidacion).
+
+## Fundamento legal
+
+- **Art. 76, 79 y 80 LFT**: vacaciones y prima vacacional.
+- **Art. 87 LFT**: aguinaldo proporcional.
+- **Art. 162 LFT**: prima de antigüedad.
+- **Arts. 485 y 486 LFT**: salario base y tope.
+- **Art. 516 LFT**: un año para reclamar.

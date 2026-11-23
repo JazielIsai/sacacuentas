@@ -1,0 +1,14 @@
+---
+import { getEntry, render } from 'astro:content';
+import Calculadora from '@/layouts/Calculadora.astro';
+import CalcAguinaldo from '@/components/calculadoras/CalcAguinaldo';
+
+const articulo = await getEntry('articulos', 'aguinaldo');
+if (!articulo) throw new Error('Falta src/content/articulos/aguinaldo.mdx');
+const { Content } = await render(articulo);
+---
+
+<Calculadora articulo={articulo}>
+  <CalcAguinaldo client:load />
+  <Content slot="articulo" />
+</Calculadora>
