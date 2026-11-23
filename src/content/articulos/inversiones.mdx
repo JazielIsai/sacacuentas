@@ -1,0 +1,84 @@
+---
+title: "Calculadora de inversiones 2026: CETES vs Nu, Mercado Pago y más"
+description: "Compara cuánto ganarías en CETES, Nu, Mercado Pago, Openbank, Klar, DiDi, Ualá y otros, ya con ISR, topes de tasa y protección de tu dinero."
+h1: "Calculadora de inversiones: ¿dónde rinde más tu dinero?"
+intro: "Escribe cuánto quieres invertir y por cuánto tiempo. Comparamos CETES y las cuentas digitales más conocidas de México con sus topes reales, la retención de ISR y la inflación."
+actualizado: 2026-11-19
+faq:
+  - pregunta: "¿Qué conviene más, CETES o Nu?"
+    respuesta: "Depende del monto. Las cuentas digitales suelen pagar su tasa más alta solo hasta cierto saldo (por ejemplo, los primeros $25,000). Con montos pequeños pueden ganarle a CETES; con montos grandes, el excedente gana una tasa menor y CETES puede quedar arriba. Usa la calculadora con tu monto."
+  - pregunta: "¿Las inversiones pagan impuestos?"
+    respuesta: "Sí. Los bancos y SOFIPOs retienen ISR sobre el capital invertido a una tasa anual que fija la Ley de Ingresos de cada año. Es un pago provisional: en tu declaración anual se calcula el impuesto sobre los intereses reales y puede salir saldo a favor."
+  - pregunta: "¿Qué pasa si quiebra el banco o la SOFIPO?"
+    respuesta: "En bancos, el IPAB protege hasta 400,000 UDIs por persona por banco. En SOFIPOs autorizadas, el Fondo de Protección cubre hasta 25,000 UDIs por persona. CETES están respaldados por el Gobierno Federal."
+  - pregunta: "¿Qué es el rendimiento real?"
+    respuesta: "Es lo que ganas después de descontar la inflación. Si tu inversión rinde 6% y la inflación es 4%, tu poder de compra solo crece alrededor de 2%."
+  - pregunta: "¿Por qué la tasa de una app es diferente a la que veo aquí?"
+    respuesta: "Las tasas cambian con frecuencia, a veces cada semana, y muchas dependen de requisitos como suscripciones, gasto mínimo o nómina. Mostramos la fecha de corte de nuestras tasas; confirma siempre en la app antes de invertir."
+  - pregunta: "¿Es una recomendación de inversión?"
+    respuesta: "No. Es una herramienta informativa para comparar escenarios. Antes de invertir revisa los términos de cada institución y, si lo necesitas, busca asesoría profesional."
+---
+import { getValores } from '@/data';
+import { CONTEXTO_INVERSION as c, OPCIONES_INVERSION, FECHA_TASAS } from '@/data/inversiones';
+import { describirTramos } from '@/lib/calculos/inversiones';
+import { dinero, numero } from '@/lib/calculos/comunes';
+export const v = getValores();
+
+## Cómo compara esta calculadora
+
+1. **Tasas por tramos.** Muchas cuentas pagan la tasa alta solo hasta cierto saldo. Calculamos cada peso con la tasa que le corresponde, en lugar de suponer que todo tu dinero gana la tasa anunciada.
+2. **Capitalización.** En las cuentas a la vista los intereses se suman diario y también generan intereses. Los CETES se reinvierten al vencer cada plazo.
+3. **ISR.** Se retiene **{numero(c.retencionISRAnual)}% anual sobre el capital** (Ley de Ingresos 2026). La retención nunca puede ser mayor que los intereses pagados. Las SOFIPOs no retienen si tu saldo no pasa de 5 UMA anuales (unos **{dinero(c.exencionSofipoUMAsAnuales * v.uma.anual)}**, art. 93 fr. XX LISR).
+4. **Inflación.** El rendimiento real descuenta la inflación anual de **{numero(c.inflacionAnual)}%** ({c.inflacionFuente}).
+
+## Tasas que usamos
+
+Tasas brutas anuales de referencia al {FECHA_TASAS}. **Cambian seguido**: confírmalas en la app de cada institución.
+
+<table>
+  <thead>
+    <tr><th>Institución</th><th>Producto</th><th>Tasa</th><th>Protección</th></tr>
+  </thead>
+  <tbody>
+    {OPCIONES_INVERSION.map((o) => (
+      <tr>
+        <td><strong>{o.institucion}</strong></td>
+        <td>{o.producto}</td>
+        <td>{describirTramos(o.tramos)}</td>
+        <td>{{ gobierno: 'Gobierno federal', ipab: 'IPAB', prosofipo: 'PROSOFIPO', ninguna: 'Sin seguro de depósitos', 'por-confirmar': 'Por confirmar' }[o.proteccion]}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## ¿Qué tan protegido está tu dinero?
+
+| Tipo | Quién protege | Hasta cuánto |
+|---|---|---|
+| CETES | Gobierno Federal | Todo (deuda del gobierno) |
+| Bancos | IPAB | 400,000 UDIs ≈ **{dinero(c.ipabUDIs * c.udi)}** por persona, por banco |
+| SOFIPOs autorizadas | Fondo de Protección (PROSOFIPO) | 25,000 UDIs ≈ **{dinero(c.prosofipoUDIs * c.udi)}** por persona, por SOFIPO |
+
+Si tienes más que eso, repartir tu dinero entre varias instituciones reduce el riesgo. Revisa que la institución esté autorizada en el padrón de la **CNBV** o en el **SIPRES de la CONDUSEF**.
+
+## GAT nominal y GAT real
+
+Las instituciones deben informar la **Ganancia Anual Total (GAT)**:
+
+- **GAT nominal:** el rendimiento antes de impuestos y de inflación.
+- **GAT real:** el rendimiento después de descontar la inflación estimada.
+
+Para comparar dos opciones, usa siempre la GAT o la tasa **con las mismas condiciones** (mismo monto y mismo plazo).
+
+## Consejos
+
+- **Fondo de emergencia** (3 a 6 meses de gastos): mejor en una opción con **liquidez diaria**.
+- **Dinero que no usarás en meses**: CETES a plazos más largos o pagarés pueden convenir.
+- **Desconfía de tasas muy por encima del mercado.** Si te prometen 30% "garantizado", probablemente es fraude. Verifica siempre que la institución esté regulada.
+
+## Fundamento
+
+- **Arts. 54 y 135 LISR** y **Ley de Ingresos de la Federación 2026**: retención de ISR sobre intereses.
+- **Art. 93 fr. XX LISR**: exención de intereses de SOFIPOs.
+- **Ley de Protección al Ahorro Bancario, art. 11**: cobertura del IPAB.
+- **Ley de Ahorro y Crédito Popular**: Fondo de Protección de SOFIPOs.
