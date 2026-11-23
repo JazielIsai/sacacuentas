@@ -1,26 +1,19 @@
-# SacaCuentas — configuración para Apache (Hostinger).
+# SacaCuentas — configuración para Apache y LiteSpeed (Hostinger).
 # El HTTPS se fuerza desde hPanel (Seguridad → SSL → "Forzar HTTPS").
 
 Options -Indexes
-DirectorySlash Off
+# Las carpetas redirigen solas de /aguinaldo a /aguinaldo/ (URL canónica).
 ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Bloquear archivos ocultos (.git, .env…), salvo .well-known (certificado SSL)
+  RewriteRule (^|/)\.(?!well-known(/|$)) - [F,L]
+
   # www → sin www
   RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
   RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
-
-  # /aguinaldo/ → /aguinaldo (URLs canónicas sin barra final)
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteCond %{REQUEST_URI} ^(.+)/$
-  RewriteRule ^ %1 [L,R=301]
-
-  # /aguinaldo → sirve /aguinaldo/index.html sin redirigir
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteCond %{REQUEST_FILENAME}/index.html -f
-  RewriteRule ^(.+)$ $1/index.html [L]
 </IfModule>
 
 <IfModule mod_mime.c>
