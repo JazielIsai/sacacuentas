@@ -1,0 +1,24 @@
+---
+import Base from '@/layouts/Base.astro';
+import { SITIO } from '@/data/sitio';
+---
+
+<Base title="Aviso de privacidad" description={`Aviso de privacidad de ${SITIO.nombre}.`}>
+  <div class="mx-auto max-w-3xl px-4 py-10">
+    <article class="prose prose-slate">
+      <h1>Aviso de privacidad</h1>
+      <!-- TODO(revisar): completar con el responsable, domicilio y medios de contacto, conforme a la
+           Ley Federal de Protección de Datos Personales en Posesión de los Particulares. Ajustar si se agregan
+           analítica, publicidad o cookies de terceros. -->
+      <p>
+        Las calculadoras de {SITIO.nombre} se ejecutan por completo en tu navegador. Los datos que escribes (salario, fechas,
+        saldos) <strong>no se envían ni se almacenan</strong> en nuestros servidores.
+      </p>
+      <p>
+        Nuestro servidor puede registrar información técnica básica (dirección IP, navegador, página visitada) con fines de
+        seguridad y operación del sitio.
+      </p>
+      <p>Para cualquier duda sobre este aviso, contáctanos en: <em>[correo de contacto pendiente]</em>.</p>
+    </article>
+  </div>
+</Base>

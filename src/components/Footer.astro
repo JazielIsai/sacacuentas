@@ -1,0 +1,33 @@
+---
+import { CALCULADORAS, SITIO } from '@/data/sitio';
+import { ANIO_VIGENTE } from '@/data';
+---
+
+<footer class="mt-16 border-t border-slate-200 bg-white">
+  <div class="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
+    <div>
+      <p class="font-bold">{SITIO.nombre}</p>
+      <p class="mt-2 text-sm text-slate-600">{SITIO.lema}.</p>
+    </div>
+    <nav aria-label="Calculadoras (pie de página)">
+      <p class="text-sm font-semibold text-slate-900">Calculadoras</p>
+      <ul class="mt-2 space-y-1.5 text-sm">
+        {CALCULADORAS.map((c) => <li><a class="text-slate-600 hover:text-marca-700" href={`/${c.slug}`}>{c.nombre}</a></li>)}
+      </ul>
+    </nav>
+    <div>
+      <p class="text-sm font-semibold text-slate-900">Sitio</p>
+      <ul class="mt-2 space-y-1.5 text-sm">
+        <li><a class="text-slate-600 hover:text-marca-700" href="/acerca">Acerca de y fuentes</a></li>
+        <li><a class="text-slate-600 hover:text-marca-700" href="/aviso-de-privacidad">Aviso de privacidad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-slate-100">
+    <p class="mx-auto max-w-6xl px-4 py-5 text-xs leading-relaxed text-slate-500">
+      Cálculo informativo, no sustituye asesoría profesional. Valores de referencia {ANIO_VIGENTE} con base en la Ley Federal del
+      Trabajo, la Ley del ISR y publicaciones oficiales (DOF, SAT, INEGI, CONASAMI, Banxico).
+      © {new Date().getFullYear()} {SITIO.nombre}.
+    </p>
+  </div>
+</footer>

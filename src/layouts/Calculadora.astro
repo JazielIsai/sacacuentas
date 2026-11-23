@@ -1,0 +1,94 @@
+---
+import Base from './Base.astro';
+import AvisoLegal from '@/components/AvisoLegal.astro';
+import FAQ from '@/components/FAQ.astro';
+import { SITIO, CALCULADORAS } from '@/data/sitio';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  articulo: CollectionEntry<'articulos'>;
+}
+
+const { articulo } = Astro.props;
+const { title, description, h1, intro, faq, actualizado } = articulo.data;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const otras = CALCULADORAS.filter((c) => `/${c.slug}` !== Astro.url.pathname);
+
+const fechaLegible = actualizado.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+const jsonLd: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: h1,
+    url,
+    description,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'es-MX',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'MXN' },
+    publisher: { '@type': 'Organization', name: SITIO.nombre, url: Astro.site?.href },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: Astro.site?.href },
+      { '@type': 'ListItem', position: 2, name: h1, item: url },
+    ],
+  },
+];
+if (faq.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: f.respuesta },
+    })),
+  });
+}
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="bg-gradient-to-b from-marca-50 to-slate-50">
+    <div class="mx-auto max-w-6xl px-4 pt-6 pb-8 sm:pt-10">
+      <nav aria-label="Ruta" class="text-sm text-slate-500">
+        <a href="/" class="hover:text-marca-700">Inicio</a>
+        <span aria-hidden="true"> / </span>
+        <span class="text-slate-700">{h1}</span>
+      </nav>
+      <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">{h1}</h1>
+      <p class="mt-3 max-w-3xl text-lg text-slate-700 text-pretty">{intro}</p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-6xl px-4">
+    <slot />
+    <AvisoLegal class="mt-4" laboral={!['/intereses-tarjeta', '/inversiones'].some((r) => Astro.url.pathname.startsWith(r))} />
+
+    <div class="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <article class="prose prose-slate max-w-none prose-headings:tracking-tight prose-a:text-marca-700 prose-table:text-sm">
+        <slot name="articulo" />
+        <p class="text-sm text-slate-500">Última actualización: <time datetime={actualizado.toISOString().slice(0, 10)}>{fechaLegible}</time>.</p>
+      </article>
+
+      <aside class="lg:sticky lg:top-20 lg:self-start">
+        <p class="text-sm font-semibold text-slate-900">Otras calculadoras</p>
+        <ul class="mt-3 space-y-2">
+          {otras.map((c) => (
+            <li>
+              <a href={`/${c.slug}`} class="tarjeta flex items-center gap-3 px-4 py-3 text-sm font-medium hover:border-marca-200 hover:bg-marca-50">
+                <span aria-hidden="true">{c.emoji}</span>{c.nombre}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+
+    <FAQ faq={faq} />
+  </div>
+</Base>

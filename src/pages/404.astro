@@ -1,0 +1,15 @@
+---
+import Base from '@/layouts/Base.astro';
+import { CALCULADORAS } from '@/data/sitio';
+---
+
+<Base title="Página no encontrada" description="La página que buscas no existe." noindex>
+  <div class="mx-auto max-w-2xl px-4 py-20 text-center">
+    <p class="text-6xl font-extrabold text-marca-700">404</p>
+    <h1 class="mt-4 text-2xl font-bold">Esta cuenta no nos salió</h1>
+    <p class="mt-2 text-slate-600">La página que buscas no existe. Prueba con alguna de nuestras calculadoras:</p>
+    <ul class="mt-6 flex flex-wrap justify-center gap-2">
+      {CALCULADORAS.map((c) => <li><a class="tarjeta inline-block px-4 py-2 text-sm font-medium hover:bg-marca-50" href={`/${c.slug}`}>{c.emoji} {c.nombre}</a></li>)}
+    </ul>
+  </div>
+</Base>

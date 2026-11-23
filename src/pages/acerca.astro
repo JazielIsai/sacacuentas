@@ -1,0 +1,48 @@
+---
+import Base from '@/layouts/Base.astro';
+import { ANIO_VIGENTE, getValores } from '@/data';
+import { dinero } from '@/lib/calculos/comunes';
+import { SITIO } from '@/data/sitio';
+const v = getValores();
+---
+
+<Base title="Acerca de y fuentes oficiales" description={`Cómo funcionan las calculadoras de ${SITIO.nombre} y de dónde salen los valores oficiales que usamos (salario mínimo, UMA, ISR).`}>
+  <div class="mx-auto max-w-3xl px-4 py-10">
+    <article class="prose prose-slate prose-a:text-marca-700">
+      <h1>Acerca de {SITIO.nombre}</h1>
+      <p>
+        {SITIO.nombre} es un sitio informativo que te ayuda a entender tu dinero: lo que te toca por ley como trabajador y cuánto te
+        cuesta una deuda. Todas las calculadoras funcionan en tu navegador; no guardamos ni enviamos los datos que escribes.
+      </p>
+
+      <h2>Valores de referencia {ANIO_VIGENTE}</h2>
+      <table>
+        <tbody>
+          <tr><th>Salario mínimo general (diario)</th><td>{dinero(v.salarioMinimo.general)}</td></tr>
+          <tr><th>Salario mínimo Zona Libre de la Frontera Norte</th><td>{dinero(v.salarioMinimo.frontera)}</td></tr>
+          <tr><th>UMA diaria</th><td>{dinero(v.uma.diaria)}</td></tr>
+          <tr><th>UMA mensual</th><td>{dinero(v.uma.mensual)}</td></tr>
+          <tr><th>UMA anual</th><td>{dinero(v.uma.anual)}</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Fuentes oficiales</h2>
+      <ul>
+        <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFT.pdf" rel="noopener">Ley Federal del Trabajo</a> (Cámara de Diputados)</li>
+        <li><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf" rel="noopener">Ley del Impuesto sobre la Renta</a></li>
+        <li><a href="https://www.gob.mx/conasami" rel="noopener">CONASAMI</a>: salarios mínimos</li>
+        <li><a href="https://www.inegi.org.mx/temas/uma/" rel="noopener">INEGI</a>: Unidad de Medida y Actualización</li>
+        <li><a href="https://www.sat.gob.mx/" rel="noopener">SAT</a>: Resolución Miscelánea Fiscal, Anexo 8 (tarifas de ISR)</li>
+        <li><a href="https://www.dof.gob.mx/" rel="noopener">Diario Oficial de la Federación</a></li>
+        <li><a href="https://www.banxico.org.mx/" rel="noopener">Banco de México</a>: reglas de tarjetas de crédito</li>
+      </ul>
+
+      <h2>Aviso</h2>
+      <p>
+        Los resultados son <strong>informativos y no sustituyen asesoría profesional</strong>. Tu caso puede tener prestaciones o
+        circunstancias que cambien el resultado. Para asesoría laboral gratuita puedes acudir a la
+        <a href="https://www.gob.mx/profedet" rel="noopener">Procuraduría Federal de la Defensa del Trabajo (PROFEDET)</a>.
+      </p>
+    </article>
+  </div>
+</Base>
