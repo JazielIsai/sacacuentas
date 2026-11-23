@@ -1,0 +1,63 @@
+---
+import Gasolina from '@/layouts/Gasolina.astro';
+import ResumenPrecios from '@/components/gasolina/ResumenPrecios.astro';
+import Historial from '@/components/gasolina/Historial.astro';
+import CercaDeMi from '@/components/gasolina/CercaDeMi';
+import { zonasPorEstado, resumenNacional, historial, snapshot } from '@/data/gasolina';
+import { dinero } from '@/lib/calculos/comunes';
+
+const zonas = zonasPorEstado();
+const nac = resumenNacional();
+const total = snapshot().estaciones.length;
+const porRegular = [...zonas].filter((z) => z.resumen.regular).sort((a, b) => a.resumen.regular!.promedio - b.resumen.regular!.promedio);
+const masBarato = porRegular[0];
+const masCaro = porRegular.at(-1)!;
+
+const faq = [
+  { pregunta: '¿Cuánto cuesta la gasolina hoy en México?', respuesta: `El precio promedio nacional de la gasolina regular es de ${dinero(nac.regular!.promedio)} por litro, la premium ${dinero(nac.premium!.promedio)} y el diésel ${dinero(nac.diesel!.promedio)}, según lo reportado por ${total.toLocaleString('es-MX')} gasolineras a la CNE.` },
+  { pregunta: '¿En qué estado está más barata la gasolina?', respuesta: `Con los datos de hoy, ${masBarato.estado.nombre} tiene el promedio más bajo de gasolina regular (${dinero(masBarato.resumen.regular!.promedio)}) y ${masCaro.estado.nombre} el más alto (${dinero(masCaro.resumen.regular!.promedio)}).` },
+  { pregunta: '¿De dónde salen estos precios?', respuesta: 'De la Comisión Nacional de Energía (CNE), que publica diariamente los precios que cada gasolinera reporta. Actualizamos los datos todos los días.' },
+  { pregunta: '¿Por qué la gasolina cuesta distinto en cada estación?', respuesta: 'En México los precios son libres: cada gasolinera fija el suyo según sus costos de compra, transporte, renta y competencia. Por eso conviene comparar antes de cargar.' },
+];
+---
+
+<Gasolina
+  title="Precio de la gasolina hoy en México por estado y municipio"
+  description={`Precio de la gasolina hoy: regular ${dinero(nac.regular!.promedio)}, premium ${dinero(nac.premium!.promedio)}, diésel ${dinero(nac.diesel!.promedio)}. Encuentra la gasolinera más barata cerca de ti.`}
+  h1="Precio de la gasolina hoy en México"
+  intro={`Compara los precios de ${total.toLocaleString('es-MX')} gasolineras de todo el país y encuentra la más barata cerca de ti.`}
+  migas={[{ nombre: 'Gasolina' }]}
+  faq={faq}
+>
+  <ResumenPrecios resumen={nac} zona="México" />
+  <div><CercaDeMi client:visible /></div>
+  <Historial dias={historial()} zona={{ tipo: 'nacional' }} />
+
+  <section aria-labelledby="estados">
+    <h2 id="estados" class="text-2xl font-bold tracking-tight">Precio promedio por estado</h2>
+    <div class="tarjeta mt-4 overflow-x-auto">
+      <table class="num w-full text-sm">
+        <thead class="bg-slate-50 text-slate-600">
+          <tr>
+            <th scope="col" class="px-4 py-2.5 text-left font-semibold">Estado</th>
+            <th scope="col" class="px-4 py-2.5 text-right font-semibold">Regular</th>
+            <th scope="col" class="px-4 py-2.5 text-right font-semibold">Premium</th>
+            <th scope="col" class="px-4 py-2.5 text-right font-semibold">Diésel</th>
+            <th scope="col" class="hidden px-4 py-2.5 text-right font-semibold sm:table-cell">Estaciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {zonas.map((z) => (
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-2.5"><a class="font-medium text-marca-700 hover:underline" href={`/gasolina/${z.estado.slug}`}>{z.estado.nombre}</a></td>
+              <td class="px-4 py-2.5 text-right">{z.resumen.regular ? dinero(z.resumen.regular.promedio) : '—'}</td>
+              <td class="px-4 py-2.5 text-right">{z.resumen.premium ? dinero(z.resumen.premium.promedio) : '—'}</td>
+              <td class="px-4 py-2.5 text-right">{z.resumen.diesel ? dinero(z.resumen.diesel.promedio) : '—'}</td>
+              <td class="hidden px-4 py-2.5 text-right text-slate-500 sm:table-cell">{z.estaciones.length.toLocaleString('es-MX')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</Gasolina>

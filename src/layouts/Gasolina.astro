@@ -1,0 +1,80 @@
+---
+import Base from './Base.astro';
+import FAQ from '@/components/FAQ.astro';
+import { SITIO } from '@/data/sitio';
+import { snapshot, fechaLegible } from '@/data/gasolina';
+
+interface Props {
+  title: string;
+  description: string;
+  h1: string;
+  intro: string;
+  migas: { nombre: string; url?: string }[];
+  faq?: { pregunta: string; respuesta: string }[];
+}
+const { title, description, h1, intro, migas, faq = [] } = Astro.props;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const s = snapshot();
+
+const jsonLd: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ nombre: 'Inicio', url: '/' }, ...migas].map((m, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: m.nombre,
+      item: new URL(m.url ?? Astro.url.pathname, Astro.site).href,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: h1,
+    url,
+    description,
+    inLanguage: 'es-MX',
+    dateModified: s.descargado,
+    isBasedOn: { '@type': 'Dataset', name: 'Precios de gasolinas y diésel por estación de servicio', creator: { '@type': 'GovernmentOrganization', name: 'Comisión Nacional de Energía' }, url: 'https://www.cne.gob.mx/ConsultaPrecios/GasolinasyDiesel/GasolinasyDiesel.html' },
+    publisher: { '@type': 'Organization', name: SITIO.nombre, url: Astro.site?.href },
+  },
+];
+if (faq.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.pregunta, acceptedAnswer: { '@type': 'Answer', text: f.respuesta } })),
+  });
+}
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="bg-gradient-to-b from-marca-50 to-slate-50">
+    <div class="mx-auto max-w-6xl px-4 pt-6 pb-8 sm:pt-10">
+      <nav aria-label="Ruta" class="text-sm text-slate-500">
+        <a href="/" class="hover:text-marca-700">Inicio</a>
+        {migas.map((m) => (
+          <>
+            <span aria-hidden="true"> / </span>
+            {m.url ? <a href={m.url} class="hover:text-marca-700">{m.nombre}</a> : <span class="text-slate-700">{m.nombre}</span>}
+          </>
+        ))}
+      </nav>
+      <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">{h1}</h1>
+      <p class="mt-3 max-w-3xl text-lg text-slate-700 text-pretty">{intro}</p>
+      <p class="mt-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200">
+        <span class="h-2 w-2 rounded-full bg-marca-500" aria-hidden="true"></span>
+        <span>Precios del <time datetime={s.fecha}>{fechaLegible()}</time>, reportados a la Comisión Nacional de Energía</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-6xl space-y-10 px-4">
+    <slot />
+    <p role="note" class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-900">
+      <strong>Información de referencia.</strong> Los precios los reportan las propias gasolineras a la CNE y pueden cambiar durante el día.
+      Verifica el precio en la bomba antes de cargar.
+    </p>
+    <FAQ faq={faq} />
+  </div>
+</Base>

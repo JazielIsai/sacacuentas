@@ -1,0 +1,77 @@
+---
+import Gasolina from '@/layouts/Gasolina.astro';
+import ResumenPrecios from '@/components/gasolina/ResumenPrecios.astro';
+import Historial from '@/components/gasolina/Historial.astro';
+import MapaEstaciones from '@/components/gasolina/MapaEstaciones';
+import TablaEstaciones from '@/components/gasolina/TablaEstaciones';
+import { zonasPorEstado, historial, type ZonaEstado, type ZonaMunicipio } from '@/data/gasolina';
+import { aPunto, masBaratas } from '@/lib/gasolina/agregados';
+import { dinero } from '@/lib/calculos/comunes';
+
+export function getStaticPaths() {
+  return zonasPorEstado().flatMap((z) =>
+    z.municipios.map((m) => ({ params: { estado: z.estado.slug, municipio: m.municipio.slug }, props: { m, vecinos: z } })),
+  );
+}
+
+const { m, vecinos } = Astro.props as { m: ZonaMunicipio; vecinos: ZonaEstado };
+const { municipio, estado, resumen } = m;
+const puntos = m.estaciones.map(aPunto);
+const [barataR] = masBaratas(m.estaciones, 'regular', 1);
+const [barataP] = masBaratas(m.estaciones, 'premium', 1);
+const [barataD] = masBaratas(m.estaciones, 'diesel', 1);
+const n = m.estaciones.length;
+const lugar = `${municipio.nombre}, ${estado.nombre}`;
+const otros = vecinos.municipios.filter((x) => x.municipio.cvegeo !== municipio.cvegeo);
+
+const faq = [
+  { pregunta: `¿Cuánto cuesta la gasolina hoy en ${municipio.nombre}?`, respuesta: `En ${lugar} la gasolina regular cuesta en promedio ${resumen.regular ? dinero(resumen.regular.promedio) : 'no disponible'}${resumen.premium ? `, la premium ${dinero(resumen.premium.promedio)}` : ''}${resumen.diesel ? ` y el diésel ${dinero(resumen.diesel.promedio)}` : ''} por litro, según ${n} ${n === 1 ? 'gasolinera' : 'gasolineras'}.` },
+  ...(barataR ? [{ pregunta: `¿Dónde está la gasolina más barata en ${municipio.nombre}?`, respuesta: `Hoy la gasolina regular más barata reportada en ${municipio.nombre} está en ${barataR.nombre}, a ${dinero(barataR.precios.regular!)} por litro.${barataD ? ` El diésel más barato está en ${barataD.nombre}, a ${dinero(barataD.precios.diesel!)}.` : ''}` }] : []),
+  { pregunta: '¿Qué tan actualizados están estos precios?', respuesta: 'Se actualizan diariamente con la información que las gasolineras reportan a la Comisión Nacional de Energía (CNE). Los precios pueden cambiar durante el día.' },
+];
+---
+
+<Gasolina
+  title={`Precio de la gasolina en ${municipio.nombre} hoy`}
+  description={`Precio de la gasolina en ${lugar} hoy: regular ${resumen.regular ? dinero(resumen.regular.promedio) : '—'} en promedio${barataR ? `; la más barata, ${dinero(barataR.precios.regular!)}` : ''}. Mapa y lista de ${n} gasolineras.`}
+  h1={`Precio de la gasolina en ${municipio.nombre} hoy`}
+  intro={`Lista y mapa de ${n} ${n === 1 ? 'gasolinera' : 'gasolineras'} en ${lugar}, ordenadas de la más barata a la más cara.`}
+  migas={[{ nombre: 'Gasolina', url: '/gasolina' }, { nombre: estado.nombre, url: `/gasolina/${estado.slug}` }, { nombre: municipio.nombre }]}
+  faq={faq}
+>
+  <ResumenPrecios resumen={resumen} zona={lugar} />
+
+  {(barataR || barataP || barataD) && (
+    <section aria-labelledby="mas-baratas" class="grid gap-3 sm:grid-cols-3">
+      <h2 id="mas-baratas" class="sr-only">Las más baratas por combustible</h2>
+      {[['Regular', barataR, 'regular'], ['Premium', barataP, 'premium'], ['Diésel', barataD, 'diesel']].map(([t, e, c]: any) =>
+        e && (
+          <div class="tarjeta border-marca-200 bg-marca-50/60 p-4">
+            <p class="text-xs font-semibold uppercase tracking-wide text-marca-800">{t} más barata</p>
+            <p class="num mt-1 text-2xl font-extrabold text-marca-900">{dinero(e.precios[c])}</p>
+            <p class="mt-0.5 truncate text-sm text-slate-700" title={e.nombre}>{e.nombre}</p>
+          </div>
+        ),
+      )}
+    </section>
+  )}
+
+  <section aria-labelledby="estaciones" class="space-y-4">
+    <h2 id="estaciones" class="text-2xl font-bold tracking-tight">Gasolineras en {municipio.nombre}</h2>
+    <div><MapaEstaciones client:visible puntos={puntos} /></div>
+    <div><TablaEstaciones client:visible filas={puntos} limite={30} /></div>
+  </section>
+
+  <Historial dias={historial()} zona={{ tipo: 'municipio', cvegeo: municipio.cvegeo }} />
+
+  {otros.length > 0 && (
+    <section aria-labelledby="otros">
+      <h2 id="otros" class="text-xl font-bold tracking-tight">Otros municipios de {estado.nombre}</h2>
+      <ul class="mt-3 flex flex-wrap gap-2">
+        {otros.map((o) => (
+          <li><a class="tarjeta inline-block px-3 py-1.5 text-sm hover:border-marca-200 hover:bg-marca-50" href={`/gasolina/${estado.slug}/${o.municipio.slug}`}>{o.municipio.nombre}</a></li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Gasolina>

@@ -1,0 +1,20 @@
+---
+import type { Resumen } from '@/lib/gasolina/agregados';
+import { COMBUSTIBLES, NOMBRE_COMBUSTIBLE } from '@/lib/gasolina/tipos';
+import { dinero } from '@/lib/calculos/comunes';
+
+interface Props { resumen: Resumen; zona: string }
+const { resumen, zona } = Astro.props;
+---
+
+<dl class="grid gap-3 sm:grid-cols-3" aria-label={`Precios promedio en ${zona}`}>
+  {COMBUSTIBLES.filter((c) => resumen[c]).map((c) => (
+    <div class="tarjeta p-5">
+      <dt class="text-sm font-semibold text-slate-600">{NOMBRE_COMBUSTIBLE[c]}</dt>
+      <dd class="num mt-1 text-3xl font-extrabold tracking-tight text-slate-900">{dinero(resumen[c]!.promedio)}</dd>
+      <dd class="num mt-1 text-xs text-slate-500">
+        Promedio · mín. {dinero(resumen[c]!.min)} · máx. {dinero(resumen[c]!.max)} · {resumen[c]!.n.toLocaleString('es-MX')} estaciones
+      </dd>
+    </div>
+  ))}
+</dl>

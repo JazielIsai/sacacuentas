@@ -1,0 +1,76 @@
+---
+import Gasolina from '@/layouts/Gasolina.astro';
+import ResumenPrecios from '@/components/gasolina/ResumenPrecios.astro';
+import Historial from '@/components/gasolina/Historial.astro';
+import MapaEstaciones from '@/components/gasolina/MapaEstaciones';
+import TablaEstaciones from '@/components/gasolina/TablaEstaciones';
+import { zonasPorEstado, historial, type ZonaEstado } from '@/data/gasolina';
+import { aPunto, masBaratas } from '@/lib/gasolina/agregados';
+import { dinero } from '@/lib/calculos/comunes';
+
+export function getStaticPaths() {
+  return zonasPorEstado().map((z) => ({ params: { estado: z.estado.slug }, props: { z } }));
+}
+
+const { z } = Astro.props as { z: ZonaEstado };
+const { estado, resumen } = z;
+const baratas = masBaratas(z.estaciones, 'regular', 25).map(aPunto);
+const top = baratas[0];
+const porRegular = z.municipios.filter((m) => m.resumen.regular).sort((a, b) => a.resumen.regular!.promedio - b.resumen.regular!.promedio);
+
+const faq = [
+  { pregunta: `¿Cuánto cuesta la gasolina hoy en ${estado.nombre}?`, respuesta: `En ${estado.nombre} el precio promedio de la gasolina regular es de ${resumen.regular ? dinero(resumen.regular.promedio) : 'no disponible'}${resumen.premium ? `, la premium ${dinero(resumen.premium.promedio)}` : ''}${resumen.diesel ? ` y el diésel ${dinero(resumen.diesel.promedio)}` : ''} por litro.` },
+  ...(top ? [{ pregunta: `¿Dónde está la gasolina más barata de ${estado.nombre}?`, respuesta: `Hoy la gasolina regular más barata reportada en ${estado.nombre} está en ${top.nombre}, a ${dinero(top.r!)} por litro.` }] : []),
+  ...(porRegular.length > 1 ? [{ pregunta: `¿En qué municipio de ${estado.nombre} está más barata la gasolina?`, respuesta: `Con los datos de hoy, ${porRegular[0].municipio.nombre} tiene el promedio más bajo de gasolina regular (${dinero(porRegular[0].resumen.regular!.promedio)}).` }] : []),
+];
+---
+
+<Gasolina
+  title={`Precio de la gasolina en ${estado.nombre} hoy`}
+  description={`Precio de la gasolina hoy en ${estado.nombre}: regular ${resumen.regular ? dinero(resumen.regular.promedio) : '—'} en promedio. Las más baratas, por municipio y en el mapa.`}
+  h1={`Precio de la gasolina en ${estado.nombre} hoy`}
+  intro={`Precios de ${z.estaciones.length.toLocaleString('es-MX')} gasolineras en ${estado.nombre}: las más baratas, el promedio por municipio y un mapa para encontrar la tuya.`}
+  migas={[{ nombre: 'Gasolina', url: '/gasolina' }, { nombre: estado.nombre }]}
+  faq={faq}
+>
+  <ResumenPrecios resumen={resumen} zona={estado.nombre} />
+
+  <section aria-labelledby="baratas">
+    <h2 id="baratas" class="text-2xl font-bold tracking-tight">Las gasolineras más baratas de {estado.nombre}</h2>
+    <p class="mt-1 text-sm text-slate-600">Ordenadas por gasolina regular. Toca un encabezado para ordenar por otro combustible.</p>
+    <div class="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div><TablaEstaciones client:visible filas={baratas} limite={10} /></div>
+      <div><MapaEstaciones client:visible puntos={baratas} /></div>
+    </div>
+  </section>
+
+  <Historial dias={historial()} zona={{ tipo: 'estado', cve: estado.cve }} />
+
+  <section aria-labelledby="municipios">
+    <h2 id="municipios" class="text-2xl font-bold tracking-tight">Precio por municipio en {estado.nombre}</h2>
+    <div class="tarjeta mt-4 overflow-x-auto">
+      <table class="num w-full text-sm">
+        <thead class="bg-slate-50 text-slate-600">
+          <tr>
+            <th scope="col" class="px-4 py-2.5 text-left font-semibold">Municipio</th>
+            <th scope="col" class="px-4 py-2.5 text-right font-semibold">Regular</th>
+            <th scope="col" class="px-4 py-2.5 text-right font-semibold">Premium</th>
+            <th scope="col" class="px-4 py-2.5 text-right font-semibold">Diésel</th>
+            <th scope="col" class="hidden px-4 py-2.5 text-right font-semibold sm:table-cell">Estaciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {z.municipios.map((m) => (
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-2.5"><a class="font-medium text-marca-700 hover:underline" href={`/gasolina/${estado.slug}/${m.municipio.slug}`}>{m.municipio.nombre}</a></td>
+              <td class="px-4 py-2.5 text-right">{m.resumen.regular ? dinero(m.resumen.regular.promedio) : '—'}</td>
+              <td class="px-4 py-2.5 text-right">{m.resumen.premium ? dinero(m.resumen.premium.promedio) : '—'}</td>
+              <td class="px-4 py-2.5 text-right">{m.resumen.diesel ? dinero(m.resumen.diesel.promedio) : '—'}</td>
+              <td class="hidden px-4 py-2.5 text-right text-slate-500 sm:table-cell">{m.estaciones.length}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</Gasolina>
