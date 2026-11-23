@@ -1,0 +1,23 @@
+# Opción VPS: sitio estático servido por Nginx detrás de Nginx Proxy Manager.
+# La opción principal (Hostinger) no usa Docker; ver README.
+services:
+  web:
+    build:
+      context: .
+      args:
+        SITE_URL: ${SITE_URL:-https://sacacuentas.mx}
+    image: sacacuentas-web:latest
+    container_name: sacacuentas-web
+    restart: unless-stopped
+    # Para probar localmente sin Nginx Proxy Manager, descomenta:
+    # ports:
+    #   - "8080:80"
+    networks:
+      - proxy
+
+networks:
+  # Red externa compartida con Nginx Proxy Manager.
+  # Créala una vez con:  docker network create npm_proxy
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-npm_proxy}
