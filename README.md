@@ -15,7 +15,7 @@ UMA, salarios mínimos, tarifas de ISR y subsidio 2026 se cotejaron con INEGI, D
 | Valor | Estado | Dónde |
 |---|---|---|
 | Pago mínimo de tarjeta | Cotejado con la Circular 13/2011; falta revisar la Circular 14/2014 | `src/data/ley.ts` |
-| Aviso de privacidad | Falta responsable y contacto | `src/pages/aviso-de-privacidad.astro` |
+| Aviso de privacidad | Falta decidir si se agrega el domicilio del responsable | `src/pages/aviso-de-privacidad.astro` |
 | **Tasas de inversión** (CETES, Nu, Mercado Pago, Openbank, Klar, DiDi, Ualá, Stori, Hey) | Tomadas de prensa y comparadores; confirmar en cada app | `src/data/inversiones.ts` |
 | Protección de Mercado Pago | Marcada "por confirmar" | `src/data/inversiones.ts` |
 
