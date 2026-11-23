@@ -10,21 +10,18 @@ Calculadoras laborales y financieras para México, explicadas paso a paso (aguin
 ## ⚠️ Antes de publicar: valores por verificar
 
 Todos los valores que cambian por año viven en [`src/data/valores-2026.ts`](src/data/valores-2026.ts), cada uno con su fuente oficial.
-Los que no se pudieron confirmar están marcados con `TODO(verificar)` y aparecen como `todo` cada vez que corres `npm test`:
+UMA, salarios mínimos, tarifas de ISR y subsidio 2026 se cotejaron con INEGI, DOF y SAT el 23-nov-2026. Pendientes:
 
-| Valor | Estado | Fuente |
+| Valor | Estado | Dónde |
 |---|---|---|
-| UMA 2026 | **Provisional:** se usa la UMA 2025 ($113.14) | INEGI / DOF, enero 2026 |
-| Salario mínimo 2026 ($315.04 general, $440.87 ZLFN) | Confirmar | Resolución CONASAMI, DOF, dic. 2025 |
-| Tarifa ISR art. 96 | Se usa la tarifa 2023–2025; confirmar si el Anexo 8 RMF 2026 la cambió | SAT, RMF Anexo 8 |
-| Subsidio para el empleo 2026 | **Provisional:** decreto 2025 (13.8% de la UMA, tope $10,171) | Decreto en el DOF |
-| Pago mínimo de tarjeta (1.5% / 1.25%) | Confirmar | Banxico, Circular 13/2011 |
+| Pago mínimo de tarjeta | Cotejado con la Circular 13/2011; falta revisar la Circular 14/2014 | `src/data/ley.ts` |
 | Aviso de privacidad | Falta responsable y contacto | `src/pages/aviso-de-privacidad.astro` |
 | **Tasas de inversión** (CETES, Nu, Mercado Pago, Openbank, Klar, DiDi, Ualá, Stori, Hey) | Tomadas de prensa y comparadores; confirmar en cada app | `src/data/inversiones.ts` |
-| Retención ISR intereses 2026 (0.90%) | Confirmar artículo de la LIF 2026 en el DOF | `src/data/inversiones.ts` |
 | Protección de Mercado Pago | Marcada "por confirmar" | `src/data/inversiones.ts` |
 
 ### Tasas de inversión (se actualizan seguido)
+
+**La página está oculta** hasta verificar sus tasas. Para publicarla: renombra `src/pages/_inversiones.astro` a `inversiones.astro` y descomenta su entrada en `src/data/sitio.ts`.
 
 Las tasas del comparador `/inversiones` viven en `src/data/inversiones.ts`. Para cada opción:
 1. Confirma la tasa, los tramos (topes) y los requisitos en la app o el sitio oficial.
