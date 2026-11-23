@@ -34,6 +34,8 @@ ErrorDocument 404 /404.html
   <FilesMatch "\.(html|json|xml|txt)$">
     Header set Cache-Control "public, max-age=1800"
   </FilesMatch>
+  # TEMPORAL: quitar junto con SITIO.indexable = true
+  Header always set X-Robots-Tag "noindex"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
