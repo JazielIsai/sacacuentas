@@ -224,7 +224,7 @@ export const OPCIONES_INVERSION: OpcionInversion[] = [
 export const CONTEXTO_INVERSION = {
   /**
    * Retención anual de ISR sobre el CAPITAL que genera intereses (arts. 54 y 135 LISR).
-   * TODO(verificar): 0.90% según la LIF 2026 (DOF 7-nov-2025), reportado por varias fuentes; confirmar el artículo en el DOF.
+   * 0.90%: art. 24 LIF 2026, DOF 7-nov-2025 (cotejado el 23-nov-2026).
    */
   retencionISRAnual: 0.9,
   /** Inflación anual de referencia. INEGI, INPC octubre 2026 (publicado 9-nov-2026): 3.75%. */

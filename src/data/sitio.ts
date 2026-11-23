@@ -21,6 +21,6 @@ export const CALCULADORAS: Calculadora[] = [
   { slug: 'vacaciones', nombre: 'Vacaciones', resumen: 'Tus días de vacaciones con la reforma de vacaciones dignas y tu prima vacacional.', emoji: '🏖️' },
   { slug: 'isr', nombre: 'ISR de tu sueldo', resumen: 'Cuánto ISR te retienen y cuánto te queda libre cada mes o quincena.', emoji: '🧾' },
   { slug: 'gasolina', nombre: 'Gasolina', resumen: 'Precio de la gasolina hoy en tu municipio y la gasolinera más barata cerca de ti.', emoji: '⛽' },
-  { slug: 'inversiones', nombre: 'Inversiones', resumen: 'Compara CETES, Nu, Mercado Pago y otras: cuánto ganarías ya con ISR y topes.', emoji: '📈' },
+  // Oculta hasta verificar las tasas (ver README): { slug: 'inversiones', nombre: 'Inversiones', resumen: 'Compara CETES, Nu, Mercado Pago y otras: cuánto ganarías ya con ISR y topes.', emoji: '📈' },
   { slug: 'intereses-tarjeta', nombre: 'Intereses de tarjeta', resumen: 'Cuánto tardas en pagar tu tarjeta y cuánto se va en intereses e IVA.', emoji: '💳' },
 ];
