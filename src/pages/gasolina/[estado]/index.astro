@@ -30,7 +30,7 @@ const faq = [
   description={`Precio de la gasolina hoy en ${estado.nombre}: regular ${resumen.regular ? dinero(resumen.regular.promedio) : '—'} en promedio. Las más baratas, por municipio y en el mapa.`}
   h1={`Precio de la gasolina en ${estado.nombre} hoy`}
   intro={`Precios de ${z.estaciones.length.toLocaleString('es-MX')} gasolineras en ${estado.nombre}: las más baratas, el promedio por municipio y un mapa para encontrar la tuya.`}
-  migas={[{ nombre: 'Gasolina', url: '/gasolina' }, { nombre: estado.nombre }]}
+  migas={[{ nombre: 'Gasolina', url: '/gasolina/' }, { nombre: estado.nombre }]}
   faq={faq}
 >
   <ResumenPrecios resumen={resumen} zona={estado.nombre} />
@@ -62,7 +62,7 @@ const faq = [
         <tbody class="divide-y divide-slate-100">
           {z.municipios.map((m) => (
             <tr class="hover:bg-slate-50">
-              <td class="px-4 py-2.5"><a class="font-medium text-marca-700 hover:underline" href={`/gasolina/${estado.slug}/${m.municipio.slug}`}>{m.municipio.nombre}</a></td>
+              <td class="px-4 py-2.5"><a class="font-medium text-marca-700 hover:underline" href={`/gasolina/${estado.slug}/${m.municipio.slug}/`}>{m.municipio.nombre}</a></td>
               <td class="px-4 py-2.5 text-right">{m.resumen.regular ? dinero(m.resumen.regular.promedio) : '—'}</td>
               <td class="px-4 py-2.5 text-right">{m.resumen.premium ? dinero(m.resumen.premium.promedio) : '—'}</td>
               <td class="px-4 py-2.5 text-right">{m.resumen.diesel ? dinero(m.resumen.diesel.promedio) : '—'}</td>

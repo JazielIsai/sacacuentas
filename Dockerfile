@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-ARG SITE_URL=https://sacacuentas.mx
+ARG SITE_URL=https://sacacuentas.isai-dev.com
 ENV SITE_URL=$SITE_URL
 RUN npm test && npm run build
 

@@ -36,7 +36,7 @@ const faq = [
   description={`Precio de la gasolina en ${lugar} hoy: regular ${resumen.regular ? dinero(resumen.regular.promedio) : '—'} en promedio${barataR ? `; la más barata, ${dinero(barataR.precios.regular!)}` : ''}. Mapa y lista de ${n} gasolineras.`}
   h1={`Precio de la gasolina en ${municipio.nombre} hoy`}
   intro={`Lista y mapa de ${n} ${n === 1 ? 'gasolinera' : 'gasolineras'} en ${lugar}, ordenadas de la más barata a la más cara.`}
-  migas={[{ nombre: 'Gasolina', url: '/gasolina' }, { nombre: estado.nombre, url: `/gasolina/${estado.slug}` }, { nombre: municipio.nombre }]}
+  migas={[{ nombre: 'Gasolina', url: '/gasolina/' }, { nombre: estado.nombre, url: `/gasolina/${estado.slug}/` }, { nombre: municipio.nombre }]}
   faq={faq}
 >
   <ResumenPrecios resumen={resumen} zona={lugar} />
@@ -69,7 +69,7 @@ const faq = [
       <h2 id="otros" class="text-xl font-bold tracking-tight">Otros municipios de {estado.nombre}</h2>
       <ul class="mt-3 flex flex-wrap gap-2">
         {otros.map((o) => (
-          <li><a class="tarjeta inline-block px-3 py-1.5 text-sm hover:border-marca-200 hover:bg-marca-50" href={`/gasolina/${estado.slug}/${o.municipio.slug}`}>{o.municipio.nombre}</a></li>
+          <li><a class="tarjeta inline-block px-3 py-1.5 text-sm hover:border-marca-200 hover:bg-marca-50" href={`/gasolina/${estado.slug}/${o.municipio.slug}/`}>{o.municipio.nombre}</a></li>
         ))}
       </ul>
     </section>

@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        SITE_URL: ${SITE_URL:-https://sacacuentas.mx}
+        SITE_URL: ${SITE_URL:-https://sacacuentas.isai-dev.com}
     image: sacacuentas-web:latest
     container_name: sacacuentas-web
     restart: unless-stopped

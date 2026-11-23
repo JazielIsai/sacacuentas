@@ -1,6 +1,6 @@
 export const SITIO = {
   nombre: 'SacaCuentas',
-  dominio: 'sacacuentas.mx',
+  dominio: 'sacacuentas.isai-dev.com',
   lema: 'Calculadoras de dinero para México, explicadas paso a paso',
   descripcion:
     'Calcula tu aguinaldo, finiquito, liquidación, vacaciones, ISR e intereses de tarjeta con la ley vigente en México. Gratis, al instante y con el desglose explicado.',

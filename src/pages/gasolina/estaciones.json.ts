@@ -1,7 +1,7 @@
 /**
  * Listado nacional compacto para "cerca de mí" (se descarga solo al pulsar el botón).
  * Formato: { fecha, e: [[id, lat, lng, nombre, regular, premium, diesel, cvegeo], ...] }
- * También sirve como API estática: https://sacacuentas.mx/gasolina/estaciones.json
+ * También sirve como API estática: https://sacacuentas.isai-dev.com/gasolina/estaciones.json
  */
 import type { APIRoute } from 'astro';
 import { snapshot } from '@/data/gasolina';

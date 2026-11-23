@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { title, description, jsonLd = [], ogImage = '/og.png', noindex = false } = Astro.props;
-const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site);
+const canonical = new URL(Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`, Astro.site);
 const ogUrl = new URL(ogImage, Astro.site);
 // Sólo añadimos la marca si cabe en ~60 caracteres (lo que Google suele mostrar).
 const fullTitle = title.includes(SITIO.nombre) || title.length > 48 ? title : `${title} | ${SITIO.nombre}`;

@@ -49,7 +49,7 @@ const faq = [
         <tbody class="divide-y divide-slate-100">
           {zonas.map((z) => (
             <tr class="hover:bg-slate-50">
-              <td class="px-4 py-2.5"><a class="font-medium text-marca-700 hover:underline" href={`/gasolina/${z.estado.slug}`}>{z.estado.nombre}</a></td>
+              <td class="px-4 py-2.5"><a class="font-medium text-marca-700 hover:underline" href={`/gasolina/${z.estado.slug}/`}>{z.estado.nombre}</a></td>
               <td class="px-4 py-2.5 text-right">{z.resumen.regular ? dinero(z.resumen.regular.promedio) : '—'}</td>
               <td class="px-4 py-2.5 text-right">{z.resumen.premium ? dinero(z.resumen.premium.promedio) : '—'}</td>
               <td class="px-4 py-2.5 text-right">{z.resumen.diesel ? dinero(z.resumen.diesel.promedio) : '—'}</td>

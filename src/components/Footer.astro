@@ -12,14 +12,14 @@ import { ANIO_VIGENTE } from '@/data';
     <nav aria-label="Calculadoras (pie de página)">
       <p class="text-sm font-semibold text-slate-900">Calculadoras</p>
       <ul class="mt-2 space-y-1.5 text-sm">
-        {CALCULADORAS.map((c) => <li><a class="text-slate-600 hover:text-marca-700" href={`/${c.slug}`}>{c.nombre}</a></li>)}
+        {CALCULADORAS.map((c) => <li><a class="text-slate-600 hover:text-marca-700" href={`/${c.slug}/`}>{c.nombre}</a></li>)}
       </ul>
     </nav>
     <div>
       <p class="text-sm font-semibold text-slate-900">Sitio</p>
       <ul class="mt-2 space-y-1.5 text-sm">
-        <li><a class="text-slate-600 hover:text-marca-700" href="/acerca">Acerca de y fuentes</a></li>
-        <li><a class="text-slate-600 hover:text-marca-700" href="/aviso-de-privacidad">Aviso de privacidad</a></li>
+        <li><a class="text-slate-600 hover:text-marca-700" href="/acerca/">Acerca de y fuentes</a></li>
+        <li><a class="text-slate-600 hover:text-marca-700" href="/aviso-de-privacidad/">Aviso de privacidad</a></li>
       </ul>
     </div>
   </div>

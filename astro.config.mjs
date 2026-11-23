@@ -5,14 +5,14 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-const SITE_URL = process.env.SITE_URL ?? 'https://sacacuentas.mx';
+const SITE_URL = process.env.SITE_URL ?? 'https://sacacuentas.isai-dev.com';
 
 // Sitio 100% estático: `npm run build` genera dist/ listo para subir a Hostinger
 // (o servir con Nginx). Los datos de gasolina se regeneran a diario con GitHub Actions.
 export default defineConfig({
   site: SITE_URL,
   output: 'static',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   integrations: [
     preact(),
     mdx(),

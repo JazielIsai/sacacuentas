@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      SITE_URL: ${{ vars.SITE_URL || 'https://sacacuentas.mx' }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://sacacuentas.isai-dev.com' }}
     steps:
       - uses: actions/checkout@v4
 

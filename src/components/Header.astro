@@ -15,7 +15,7 @@ const actual = Astro.url.pathname.replace(/\/$/, '');
         {CALCULADORAS.map((c) => (
           <li>
             <a
-              href={`/${c.slug}`}
+              href={`/${c.slug}/`}
               class:list={[
                 'rounded-md px-3 py-2 transition-colors hover:bg-marca-50 hover:text-marca-800',
                 actual === `/${c.slug}` || actual.startsWith(`/${c.slug}/`) ? 'bg-marca-50 text-marca-800' : 'text-slate-600',
@@ -37,7 +37,7 @@ const actual = Astro.url.pathname.replace(/\/$/, '');
       <ul class="absolute right-0 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
         {CALCULADORAS.map((c) => (
           <li>
-            <a href={`/${c.slug}`} class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-marca-50">
+            <a href={`/${c.slug}/`} class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-marca-50">
               <span aria-hidden="true">{c.emoji}</span>{c.nombre}
             </a>
           </li>
