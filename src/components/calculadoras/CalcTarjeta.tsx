@@ -2,6 +2,8 @@ import { useMemo, useState } from 'preact/hooks';
 import { getValores } from '@/data';
 import { calcularIntereses } from '@/lib/calculos/intereses-tarjeta';
 import { dinero } from '@/lib/calculos/comunes';
+import type { CampoEnlace } from '@/lib/compartir';
+import { Compartir, useDatosDeEnlace } from './compartir';
 import { aNumero, Campo, Distribucion, Fila, Formulario, InputDinero, InputNumero, intentar, PanelResultado, Selector } from './ui';
 
 function duracion(meses: number): string {
@@ -20,6 +22,15 @@ export default function CalcTarjeta() {
   const [pago, setPago] = useState('2000');
   const [limite, setLimite] = useState('');
   const [verTabla, setVerTabla] = useState(false);
+
+  const campos: Record<string, CampoEnlace> = {
+    saldo: { valor: saldo, poner: setSaldo, tipo: 'numero' },
+    tasa: { valor: tasa, poner: setTasa, tipo: 'numero' },
+    modo: { valor: modo, poner: (x: string) => setModo(x as typeof modo), tipo: ['fijo', 'minimo'] },
+    pago: { valor: pago, poner: setPago, tipo: 'numero' },
+    limite: { valor: limite, poner: setLimite, tipo: 'numero' },
+  };
+  useDatosDeEnlace(campos);
 
   const res = useMemo(
     () =>
@@ -114,6 +125,7 @@ export default function CalcTarjeta() {
                 )}
               </div>
             )}
+            <Compartir nombre="Calculadora de intereses de tarjeta" resultado={res.r.liquidable ? `Termino de pagar mi tarjeta en ${duracion(res.r.meses)} y pago ${dinero(res.r.totalIntereses + res.r.totalIva)} de más.` : 'Con ese pago no termino de pagar mi tarjeta.'} campos={campos} />
           </PanelResultado>
         ) : (
           <PanelResultado titulo="Tu deuda" error={res.error} />

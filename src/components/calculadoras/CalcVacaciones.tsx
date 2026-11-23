@@ -3,6 +3,8 @@ import { ANIO_VIGENTE } from '@/data';
 import { calcularVacaciones } from '@/lib/calculos/vacaciones';
 import { dinero, type Periodicidad } from '@/lib/calculos/comunes';
 import { CampoSalario } from './CampoSalario';
+import type { CampoEnlace } from '@/lib/compartir';
+import { Compartir, useDatosDeEnlace } from './compartir';
 import { aNumero, Campo, Distribucion, Fila, Formulario, InputFecha, InputNumero, intentar, PanelResultado, useFechaHoy } from './ui';
 
 export default function CalcVacaciones() {
@@ -11,6 +13,15 @@ export default function CalcVacaciones() {
   const [ingreso, setIngreso] = useState(`${ANIO_VIGENTE - 3}-01-15`);
   const [corte, setCorte] = useFechaHoy(`${ANIO_VIGENTE}-06-30`);
   const [prima, setPrima] = useState('25');
+
+  const campos: Record<string, CampoEnlace> = {
+    salario: { valor: salario, poner: setSalario, tipo: 'numero' },
+    periodo: { valor: periodicidad, poner: (x: string) => setPeriodicidad(x as typeof periodicidad), tipo: ['mensual', 'quincenal', 'semanal', 'diario'] },
+    ingreso: { valor: ingreso, poner: setIngreso, tipo: 'fecha' },
+    corte: { valor: corte, poner: setCorte, tipo: 'fecha' },
+    prima: { valor: prima, poner: setPrima, tipo: 'numero' },
+  };
+  useDatosDeEnlace(campos);
 
   const res = useMemo(
     () =>
@@ -53,7 +64,9 @@ export default function CalcVacaciones() {
             ]}
             pasos={res.r.pasos}
             avisos={res.r.avisos}
-          />
+          >
+            <Compartir nombre="Calculadora de vacaciones" resultado={`Mis vacaciones: ${res.r.diasVacaciones} días, ${dinero(res.r.total)} con prima.`} campos={campos} />
+          </PanelResultado>
         ) : (
           <PanelResultado titulo="Tus vacaciones" error={res.error} />
         )

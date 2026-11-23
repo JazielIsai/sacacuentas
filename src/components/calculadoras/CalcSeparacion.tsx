@@ -4,6 +4,8 @@ import { ANIO_VIGENTE, getValores } from '@/data';
 import { calcularFiniquito, calcularLiquidacion, type MotivoSalida, type Zona } from '@/lib/calculos/separacion';
 import { dinero, type Periodicidad } from '@/lib/calculos/comunes';
 import { CampoSalario } from './CampoSalario';
+import type { CampoEnlace } from '@/lib/compartir';
+import { Compartir, useDatosDeEnlace } from './compartir';
 import {
   aNumero,
   Campo,
@@ -33,6 +35,23 @@ export default function CalcSeparacion({ modo }: { modo: 'finiquito' | 'liquidac
   const [prima, setPrima] = useState('25');
   const [incluir20, setIncluir20] = useState(false);
   const [usarSDI, setUsarSDI] = useState(true);
+
+  const campos: Record<string, CampoEnlace> = {
+    salario: { valor: salario, poner: setSalario, tipo: 'numero' },
+    periodo: { valor: periodicidad, poner: (x: string) => setPeriodicidad(x as typeof periodicidad), tipo: ['mensual', 'quincenal', 'semanal', 'diario'] },
+    ingreso: { valor: ingreso, poner: setIngreso, tipo: 'fecha' },
+    salida: { valor: salida, poner: setSalida, tipo: 'fecha' },
+    motivo: { valor: motivo, poner: (x: string) => setMotivo(x as typeof motivo), tipo: ['renuncia', 'despido-justificado'] },
+    zona: { valor: zona, poner: (x: string) => setZona(x as typeof zona), tipo: ['general', 'frontera'] },
+    dpend: { valor: diasPend, poner: setDiasPend, tipo: 'numero' },
+    vpend: { valor: vacPend, poner: setVacPend, tipo: 'numero' },
+    agpag: { valor: aguinaldoPagado ? '1' : '0', poner: (x: string) => setAguinaldoPagado(x === '1'), tipo: 'si' },
+    dias: { valor: diasAg, poner: setDiasAg, tipo: 'numero' },
+    prima: { valor: prima, poner: setPrima, tipo: 'numero' },
+    veinte: { valor: incluir20 ? '1' : '0', poner: (x: string) => setIncluir20(x === '1'), tipo: 'si' },
+    sdi: { valor: usarSDI ? '1' : '0', poner: (x: string) => setUsarSDI(x === '1'), tipo: 'si' },
+  };
+  useDatosDeEnlace(campos);
 
   const res = useMemo(() => {
     const comun = {
@@ -152,7 +171,9 @@ export default function CalcSeparacion({ modo }: { modo: 'finiquito' | 'liquidac
             ]}
             pasos={res.r.pasos}
             avisos={res.r.avisos}
-          />
+          >
+            <Compartir nombre={modo === 'finiquito' ? 'Calculadora de finiquito' : 'Calculadora de liquidación'} resultado={`${modo === 'finiquito' ? 'Mi finiquito' : 'Mi liquidación'}: ${dinero(res.r.total)} brutos (estimado).`} campos={campos} />
+          </PanelResultado>
         ) : (
           <PanelResultado titulo={titulo} error={res.error} />
         )

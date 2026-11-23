@@ -2,12 +2,21 @@ import { useMemo, useState } from 'preact/hooks';
 import { getValores } from '@/data';
 import { calcularISR, type PeriodoISR } from '@/lib/calculos/isr';
 import { dinero } from '@/lib/calculos/comunes';
+import type { CampoEnlace } from '@/lib/compartir';
+import { Compartir, useDatosDeEnlace } from './compartir';
 import { aNumero, Campo, Distribucion, Fila, Formulario, InputDinero, intentar, PanelResultado, Selector } from './ui';
 
 export default function CalcISR() {
   const [ingreso, setIngreso] = useState('15000');
   const [periodo, setPeriodo] = useState<PeriodoISR>('mensual');
   const [zona, setZona] = useState<'general' | 'frontera'>('general');
+
+  const campos: Record<string, CampoEnlace> = {
+    sueldo: { valor: ingreso, poner: setIngreso, tipo: 'numero' },
+    periodo: { valor: periodo, poner: (x: string) => setPeriodo(x as typeof periodo), tipo: ['mensual', 'quincenal', 'semanal', 'diario'] },
+    zona: { valor: zona, poner: (x: string) => setZona(x as typeof zona), tipo: ['general', 'frontera'] },
+  };
+  useDatosDeEnlace(campos);
 
   const res = useMemo(() => intentar(() => calcularISR({ ingreso: aNumero(ingreso), periodo, zona }, getValores())), [ingreso, periodo, zona]);
   const pct = res.ok ? (res.r.isrRetenido / aNumero(ingreso)) * 100 : 0;
@@ -64,7 +73,9 @@ export default function CalcISR() {
             ]}
             pasos={res.r.pasos}
             avisos={res.r.avisos}
-          />
+          >
+            <Compartir nombre="Calculadora de ISR" resultado={`ISR que me retienen: ${dinero(res.r.isrRetenido)} (estimado).`} campos={campos} />
+          </PanelResultado>
         ) : (
           <PanelResultado titulo="ISR que te retienen" error={res.error} />
         )

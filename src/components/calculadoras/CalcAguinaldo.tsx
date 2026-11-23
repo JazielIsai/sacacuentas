@@ -3,6 +3,8 @@ import { ANIO_VIGENTE, getValores } from '@/data';
 import { calcularAguinaldo } from '@/lib/calculos/aguinaldo';
 import { dinero, numero, type Periodicidad } from '@/lib/calculos/comunes';
 import { CampoSalario } from './CampoSalario';
+import type { CampoEnlace } from '@/lib/compartir';
+import { Compartir, useDatosDeEnlace } from './compartir';
 import { aNumero, Campo, Distribucion, Fila, Formulario, InputFecha, InputNumero, intentar, PanelResultado } from './ui';
 
 export default function CalcAguinaldo() {
@@ -11,6 +13,15 @@ export default function CalcAguinaldo() {
   const [ingreso, setIngreso] = useState(`${ANIO_VIGENTE - 2}-03-01`);
   const [corte, setCorte] = useState(`${ANIO_VIGENTE}-12-31`);
   const [dias, setDias] = useState('15');
+
+  const campos: Record<string, CampoEnlace> = {
+    salario: { valor: salario, poner: setSalario, tipo: 'numero' },
+    periodo: { valor: periodicidad, poner: (x: string) => setPeriodicidad(x as typeof periodicidad), tipo: ['mensual', 'quincenal', 'semanal', 'diario'] },
+    ingreso: { valor: ingreso, poner: setIngreso, tipo: 'fecha' },
+    corte: { valor: corte, poner: setCorte, tipo: 'fecha' },
+    dias: { valor: dias, poner: setDias, tipo: 'numero' },
+  };
+  useDatosDeEnlace(campos);
 
   const res = useMemo(
     () =>
@@ -52,7 +63,9 @@ export default function CalcAguinaldo() {
             ]}
             pasos={res.r.pasos}
             avisos={res.r.avisos}
-          />
+          >
+            <Compartir nombre="Calculadora de aguinaldo" resultado={`Mi aguinaldo: ${dinero(res.r.bruto)} brutos (${dinero(res.r.neto)} netos, estimado).`} campos={campos} />
+          </PanelResultado>
         ) : (
           <PanelResultado titulo="Tu aguinaldo bruto" error={res.error} />
         )
