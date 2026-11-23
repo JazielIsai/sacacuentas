@@ -103,6 +103,8 @@ Las pruebas usan valores fijos de prueba (`tests/fixture.ts`), así que no se ro
 
 ## SEO
 
+> **Todo el sitio está en `noindex`** mientras se elige la marca. Para indexarlo: `indexable: true` en `src/data/sitio.ts` y quita `X-Robots-Tag` de `public/.htaccess`.
+
 - `<title>`, description, canonical, Open Graph y Twitter card por página (`components/SEO.astro`).
 - JSON-LD: `WebSite` y `Organization` en la portada; `WebApplication`, `BreadcrumbList` y `FAQPage` en cada calculadora.
 - `sitemap-index.xml` automático (`@astrojs/sitemap`), `robots.txt` dinámico y URLs con barra final (`/aguinaldo` redirige 301 a `/aguinaldo/`).
