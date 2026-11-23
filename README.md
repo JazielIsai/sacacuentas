@@ -1,4 +1,4 @@
-# SacaCuentas (sacacuentas.mx)
+# SacaCuentas (sacacuentas.isai-dev.com)
 
 Calculadoras laborales y financieras para México, explicadas paso a paso (aguinaldo, finiquito, liquidación, vacaciones, ISR, inversiones e intereses de tarjeta), y comparador diario de **precios de gasolina** por estado y municipio.
 
@@ -105,7 +105,7 @@ Las pruebas usan valores fijos de prueba (`tests/fixture.ts`), así que no se ro
 
 - `<title>`, description, canonical, Open Graph y Twitter card por página (`components/SEO.astro`).
 - JSON-LD: `WebSite` y `Organization` en la portada; `WebApplication`, `BreadcrumbList` y `FAQPage` en cada calculadora.
-- `sitemap-index.xml` automático (`@astrojs/sitemap`), `robots.txt` dinámico y URLs sin barra final (`/aguinaldo/` redirige 301 a `/aguinaldo`).
+- `sitemap-index.xml` automático (`@astrojs/sitemap`), `robots.txt` dinámico y URLs con barra final (`/aguinaldo` redirige 301 a `/aguinaldo/`).
 - Imagen Open Graph en `public/og.png`. Para regenerarla: `node scripts/generar-og.mjs`.
 
 ---
@@ -158,7 +158,7 @@ El workflow `.github/workflows/publicar.yml` corre:
    | `SSH_PORT` | `65002` |
    | `SSH_USER` | `u123456789` |
    | `SSH_KEY` | contenido completo de `~/.ssh/sacacuentas_deploy` (la **privada**) |
-   | `REMOTE_PATH` | `domains/sacacuentas.mx/public_html/` (con `/` final) |
+   | `REMOTE_PATH` | `domains/sacacuentas.isai-dev.com/public_html/` (con `/` final) |
 
    Opcional: en *Variables*, `SITE_URL` si usas otro dominio.
 4. **hPanel → Seguridad → SSL:** instala el certificado y activa *Forzar HTTPS*.
@@ -166,7 +166,7 @@ El workflow `.github/workflows/publicar.yml` corre:
 
 ⚠️ `rsync --delete` deja `REMOTE_PATH` **idéntico** a `dist/`: borra cualquier otro archivo que haya en esa carpeta. Usa una carpeta dedicada al sitio.
 
-El `public/.htaccess` (se copia a `dist/`) da URLs limpias (`/aguinaldo`), redirige `/aguinaldo/` → `/aguinaldo`, quita `www`, muestra el 404 propio y configura caché.
+El `public/.htaccess` (se copia a `dist/`) redirige `/aguinaldo` → `/aguinaldo/`, quita `www`, muestra el 404 propio y configura caché.
 
 **Costo:** en un repo privado, cada corrida toma ~3–5 min; entra holgado en los 2,000 min gratis al mes. En un repo público es gratis sin límite.
 
