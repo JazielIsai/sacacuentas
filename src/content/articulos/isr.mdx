@@ -37,7 +37,7 @@ Tu patrón usa la **tarifa del artículo 96 de la Ley del ISR**. Es una tabla pr
     <tr><th>Límite inferior</th><th>Límite superior</th><th>Cuota fija</th><th>% sobre excedente</th></tr>
   </thead>
   <tbody>
-    {v.isr.tarifaMensual.map((r) => (
+    {v.isr.tarifas.mensual.map((r) => (
       <tr>
         <td>{dinero(r.limiteInferior)}</td>
         <td>{r.limiteSuperior === Infinity ? 'En adelante' : dinero(r.limiteSuperior)}</td>
@@ -48,7 +48,7 @@ Tu patrón usa la **tarifa del artículo 96 de la Ley del ISR**. Es una tabla pr
   </tbody>
 </table>
 
-Las tarifas quincenal y semanal se obtienen dividiendo la mensual entre 30.4 y multiplicando por los días del periodo, igual que en el Anexo 8 de la Resolución Miscelánea Fiscal. Puede haber diferencias de centavos por redondeo.
+Para pagos diarios, semanales y quincenales usamos las tarifas propias que publica el Anexo 8. Si en el mes **solo ganas el salario mínimo general** de tu zona, no deben retenerte ISR (art. 96). Usamos la UMA vigente desde febrero; en enero de 2026 el subsidio fue de 15.59% de la UMA 2025.
 
 ## Fundamento legal
 

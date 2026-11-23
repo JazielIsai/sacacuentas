@@ -26,8 +26,8 @@ export interface ValoresAnuales {
   };
 
   isr: {
-    /** Tarifa mensual del art. 96 LISR. Las demás periodicidades se derivan de ésta. */
-    tarifaMensual: RenglonISR[];
+    /** Tarifas del art. 96 LISR publicadas por periodo de pago (Anexo 8 RMF). */
+    tarifas: Record<'diario' | 'semanal' | 'quincenal' | 'mensual', RenglonISR[]>;
   };
 
   subsidioEmpleo: {

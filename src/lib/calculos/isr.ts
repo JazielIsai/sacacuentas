@@ -4,8 +4,7 @@ import { dinero, r2, validarPositivo, type Paso, type Resultado } from './comune
 export type PeriodoISR = 'mensual' | 'quincenal' | 'semanal' | 'diario';
 
 /**
- * Días que abarca cada periodo de pago. El SAT deriva las tarifas no mensuales
- * de la mensual con el factor de 30.4 días (Anexo 8 RMF).
+ * Días de cada periodo, para prorratear el subsidio (decreto: mensual ÷ 30.4 × días).
  */
 export const DIAS_PERIODO: Record<PeriodoISR, number> = {
   mensual: 30.4,
@@ -13,22 +12,6 @@ export const DIAS_PERIODO: Record<PeriodoISR, number> = {
   semanal: 7,
   diario: 1,
 };
-
-/**
- * Convierte la tarifa mensual a otra periodicidad (mensual ÷ 30.4 × días).
- * Nota: las tablas publicadas en el Anexo 8 se calculan así y pueden diferir
- * por centavos en algún límite por redondeo.
- */
-export function tarifaPara(periodo: PeriodoISR, tarifaMensual: RenglonISR[]): RenglonISR[] {
-  if (periodo === 'mensual') return tarifaMensual;
-  const f = DIAS_PERIODO[periodo] / 30.4;
-  return tarifaMensual.map((r) => ({
-    limiteInferior: r2(r.limiteInferior * f),
-    limiteSuperior: r.limiteSuperior === Infinity ? Infinity : r2(r.limiteSuperior * f),
-    cuotaFija: r2(r.cuotaFija * f),
-    porcentaje: r.porcentaje,
-  }));
-}
 
 export function buscarRenglon(base: number, tarifa: RenglonISR[]): RenglonISR {
   // Se busca el último renglón cuyo límite inferior no exceda la base; así no
@@ -50,6 +33,8 @@ export function isrTarifa(base: number, tarifa: RenglonISR[]) {
 export interface EntradaISR {
   ingreso: number;
   periodo: PeriodoISR;
+  /** Área geográfica, para la exención del salario mínimo (art. 96). */
+  zona?: 'general' | 'frontera';
 }
 
 export interface ResultadoISR extends Resultado {
@@ -62,7 +47,7 @@ export interface ResultadoISR extends Resultado {
 export function calcularISR(e: EntradaISR, v: ValoresAnuales): ResultadoISR {
   validarPositivo(e.ingreso, 'El ingreso');
   const dias = DIAS_PERIODO[e.periodo];
-  const tarifa = tarifaPara(e.periodo, v.isr.tarifaMensual);
+  const tarifa = v.isr.tarifas[e.periodo];
   const t = isrTarifa(e.ingreso, tarifa);
   const pasos: Paso[] = [];
   const avisos: string[] = [];
@@ -93,13 +78,18 @@ export function calcularISR(e: EntradaISR, v: ValoresAnuales): ResultadoISR {
     );
   }
 
+  // Art. 96 LISR: no se retiene a quien en el mes solo percibe un salario mínimo general de su área.
+  const sm = v.salarioMinimo[e.zona ?? 'general'];
+  const soloMinimo = e.ingreso <= r2(sm * (e.periodo === 'mensual' ? 365 / 12 : dias));
+
   // Desde el decreto de 2024 el subsidio sólo reduce el ISR; no genera saldo a favor en efectivo.
   const subsidioAplicado = Math.min(subsidio, t.isr);
-  const isrRetenido = r2(t.isr - subsidioAplicado);
-  if (subsidio > t.isr) {
+  const isrRetenido = soloMinimo ? 0 : r2(t.isr - subsidioAplicado);
+  if (soloMinimo) avisos.push('Si solo ganas el salario mínimo, tu patrón no debe retenerte ISR (art. 96 LISR).');
+  if (!soloMinimo && subsidio > t.isr) {
     avisos.push('El subsidio es mayor que el ISR: la retención queda en $0 (el excedente no se entrega en efectivo).');
   }
-  pasos.push({ etiqueta: 'ISR a retener', formula: 'ISR − subsidio aplicado', valor: isrRetenido, destacado: true });
+  pasos.push({ etiqueta: 'ISR a retener', formula: soloMinimo ? 'salario mínimo: sin retención' : 'ISR − subsidio aplicado', fundamento: 'Art. 96 LISR', valor: isrRetenido, destacado: true });
 
   const neto = r2(e.ingreso - isrRetenido);
   pasos.push({ etiqueta: 'Sueldo después de ISR', valor: neto, destacado: true });

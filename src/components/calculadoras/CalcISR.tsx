@@ -7,8 +7,9 @@ import { aNumero, Campo, Distribucion, Fila, Formulario, InputDinero, intentar, 
 export default function CalcISR() {
   const [ingreso, setIngreso] = useState('15000');
   const [periodo, setPeriodo] = useState<PeriodoISR>('mensual');
+  const [zona, setZona] = useState<'general' | 'frontera'>('general');
 
-  const res = useMemo(() => intentar(() => calcularISR({ ingreso: aNumero(ingreso), periodo }, getValores())), [ingreso, periodo]);
+  const res = useMemo(() => intentar(() => calcularISR({ ingreso: aNumero(ingreso), periodo, zona }, getValores())), [ingreso, periodo, zona]);
   const pct = res.ok ? (res.r.isrRetenido / aNumero(ingreso)) * 100 : 0;
 
   return (
@@ -35,6 +36,19 @@ export default function CalcISR() {
               )}
             </Campo>
           </Fila>
+          <Campo label="Zona salarial" ayuda="Quien solo gana el salario mínimo de su zona no paga ISR.">
+            {(id) => (
+              <Selector
+                id={id}
+                value={zona}
+                onChange={setZona}
+                opciones={[
+                  ['general', 'Resto del país'],
+                  ['frontera', 'Zona Libre de la Frontera Norte'],
+                ]}
+              />
+            )}
+          </Campo>
         </Formulario>
       }
       derecha={

@@ -86,7 +86,7 @@ export function calcularAguinaldo(e: EntradaAguinaldo, v: ValoresAnuales): Resul
 
   // Estimación: ISR del mes con aguinaldo gravado − ISR del mes sin él (art. 96 LISR).
   const mensual = r2(sd * 30.4);
-  const isrEstimado = gravado > 0 ? r2(isrTarifa(mensual + gravado, v.isr.tarifaMensual).isr - isrTarifa(mensual, v.isr.tarifaMensual).isr) : 0;
+  const isrEstimado = gravado > 0 ? r2(isrTarifa(mensual + gravado, v.isr.tarifas.mensual).isr - isrTarifa(mensual, v.isr.tarifas.mensual).isr) : 0;
   pasos.push({
     etiqueta: 'ISR estimado sobre la parte gravada',
     formula: gravado > 0 ? `ISR(${dinero(mensual)} + ${dinero(gravado)}) − ISR(${dinero(mensual)})` : 'no hay parte gravada',
