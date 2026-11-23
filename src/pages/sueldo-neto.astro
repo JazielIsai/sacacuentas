@@ -1,0 +1,14 @@
+---
+import { getEntry, render } from 'astro:content';
+import Calculadora from '@/layouts/Calculadora.astro';
+import CalcSueldoNeto from '@/components/calculadoras/CalcSueldoNeto';
+
+const articulo = await getEntry('articulos', 'sueldo-neto');
+if (!articulo) throw new Error('Falta src/content/articulos/sueldo-neto.mdx');
+const { Content } = await render(articulo);
+---
+
+<Calculadora articulo={articulo}>
+  <CalcSueldoNeto client:load />
+  <Content slot="articulo" />
+</Calculadora>

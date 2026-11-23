@@ -44,6 +44,12 @@ export interface ResultadoISR extends Resultado {
   neto: number;
 }
 
+/** ¿Gana solo el salario mínimo de su zona? (art. 96 LISR y art. 36 LSS) */
+export function esSoloSalarioMinimo(e: EntradaISR, v: ValoresAnuales): boolean {
+  const sm = v.salarioMinimo[e.zona ?? 'general'];
+  return e.ingreso <= r2(sm * (e.periodo === 'mensual' ? 365 / 12 : DIAS_PERIODO[e.periodo]));
+}
+
 export function calcularISR(e: EntradaISR, v: ValoresAnuales): ResultadoISR {
   validarPositivo(e.ingreso, 'El ingreso');
   const dias = DIAS_PERIODO[e.periodo];
@@ -79,8 +85,7 @@ export function calcularISR(e: EntradaISR, v: ValoresAnuales): ResultadoISR {
   }
 
   // Art. 96 LISR: no se retiene a quien en el mes solo percibe un salario mínimo general de su área.
-  const sm = v.salarioMinimo[e.zona ?? 'general'];
-  const soloMinimo = e.ingreso <= r2(sm * (e.periodo === 'mensual' ? 365 / 12 : dias));
+  const soloMinimo = esSoloSalarioMinimo(e, v);
 
   // Desde el decreto de 2024 el subsidio sólo reduce el ISR; no genera saldo a favor en efectivo.
   const subsidioAplicado = Math.min(subsidio, t.isr);

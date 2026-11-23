@@ -12,7 +12,7 @@ faq:
   - pregunta: "¿Por qué mi recibo muestra un ISR distinto?"
     respuesta: "Puede deberse a otros ingresos gravables (horas extra, bonos, vales), a que tu patrón calcule con otra periodicidad, o a ajustes anuales. Esta calculadora considera solo el sueldo que escribes."
   - pregunta: "¿La calculadora incluye el IMSS?"
-    respuesta: "No. Las cuotas obreras del IMSS son otra deducción aparte del ISR. El 'te queda' es tu sueldo menos ISR, antes de IMSS, INFONAVIT u otros descuentos."
+    respuesta: "No. Las cuotas obreras del IMSS son otra deducción aparte del ISR. El 'te queda' es tu sueldo menos ISR, antes de IMSS, INFONAVIT u otros descuentos. Para incluirlos usa la calculadora de sueldo neto."
   - pregunta: "¿Qué es la tasa efectiva?"
     respuesta: "El porcentaje real de tu sueldo que se va en ISR. Siempre es menor que el porcentaje del renglón de la tabla, porque ese porcentaje solo se aplica al excedente."
 ---
@@ -29,6 +29,8 @@ Tu patrón usa la **tarifa del artículo 96 de la Ley del ISR**. Es una tabla pr
 3. Multiplica el excedente por el **porcentaje** del renglón.
 4. Suma la **cuota fija**: eso es el ISR antes de subsidio.
 5. Si tu ingreso mensual no pasa de **{dinero(v.subsidioEmpleo.limiteIngresoMensual)}**, resta el **subsidio para el empleo** ({v.subsidioEmpleo.porcentajeUmaMensual}% de la UMA mensual, unos {dinero((v.uma.mensual * v.subsidioEmpleo.porcentajeUmaMensual) / 100)} al mes).
+
+Para descontar también el IMSS, usa la [calculadora de sueldo neto](/sueldo-neto/).
 
 ## Tarifa mensual de referencia
 

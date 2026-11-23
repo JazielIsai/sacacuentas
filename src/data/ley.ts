@@ -51,3 +51,19 @@ export const PRIMA_ANTIGUEDAD_ANIOS_RENUNCIA = 15;
  */
 export const PAGO_MINIMO_PCT_SALDO = 0.015;
 export const PAGO_MINIMO_PCT_LINEA = 0.0125;
+
+/**
+ * Cuotas a cargo del trabajador — Ley del Seguro Social (reforma DOF 15-01-2026, cotejada el 23-nov-2026).
+ * El excedente: art. 106 fr. II fija 2% y el transitorio Décimo Noveno lo redujo 0.16 puntos
+ * cada año de 1998 a 2007 (10 veces) → 0.40%.
+ * La ley expresa topes en salarios mínimos; se usan UMA por la desindexación.
+ */
+export const IMSS_OBRERO = [
+  { nombre: 'excedente de 3 UMA', porcentaje: 0.4, soloExcedente: true, fundamento: 'Art. 106 fr. II y 19.º transitorio LSS' },
+  { nombre: 'prestaciones en dinero', porcentaje: 0.25, soloExcedente: false, fundamento: 'Art. 107 fr. II LSS' },
+  { nombre: 'gastos médicos de pensionados', porcentaje: 0.375, soloExcedente: false, fundamento: 'Art. 25 LSS' },
+  { nombre: 'invalidez y vida', porcentaje: 0.625, soloExcedente: false, fundamento: 'Art. 147 LSS' },
+  { nombre: 'cesantía y vejez', porcentaje: 1.125, soloExcedente: false, fundamento: 'Art. 168 fr. II LSS' },
+];
+export const IMSS_UMBRAL_EXCEDENTE_UMA = 3;
+export const IMSS_TOPE_UMA = 25;

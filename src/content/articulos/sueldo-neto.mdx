@@ -1,0 +1,48 @@
+---
+title: "Calculadora de sueldo neto 2026: de bruto a neto con ISR e IMSS"
+description: "Calcula cuánto te queda de tu sueldo mensual, quincenal o semanal después de ISR e IMSS en 2026. Con desglose paso a paso."
+h1: "Calculadora de sueldo neto 2026"
+intro: "Escribe tu sueldo bruto y mira cuánto te queda después de ISR e IMSS, con cada descuento explicado."
+actualizado: 2026-11-23
+faq:
+  - pregunta: "¿Qué me descuentan de mi sueldo?"
+    respuesta: "Normalmente ISR y la cuota obrera del IMSS. Según tu caso, también Infonavit, préstamos, pensión alimenticia o caja de ahorro."
+  - pregunta: "¿Cuánto se descuenta de IMSS?"
+    respuesta: "El trabajador paga 2.375% de su salario base de cotización, más 0.40% de la parte que pase de 3 UMA diarias. Si ganas el salario mínimo, tu patrón paga esa cuota (art. 36 LSS)."
+  - pregunta: "¿Qué es el salario base de cotización?"
+    respuesta: "Tu salario diario más la parte proporcional de prestaciones como aguinaldo y prima vacacional. Tiene un tope de 25 UMA diarias."
+  - pregunta: "¿Por qué mi recibo no coincide exactamente?"
+    respuesta: "Por los días reales del mes, bonos, vales, comisiones, faltas u otras prestaciones que cambian la base del ISR o del IMSS."
+---
+import { getValores } from '@/data';
+import { IMSS_OBRERO, IMSS_TOPE_UMA, IMSS_UMBRAL_EXCEDENTE_UMA } from '@/data/ley';
+import { dinero } from '@/lib/calculos/comunes';
+export const v = getValores();
+
+## Del sueldo bruto al neto
+
+> sueldo neto = sueldo bruto − ISR − cuota del IMSS − otros descuentos
+
+El ISR se calcula igual que en la [calculadora de ISR](/isr/). La cuota del IMSS se cobra sobre tu **salario base de cotización**, que suele ser un poco mayor que tu salario diario porque incluye parte del aguinaldo y la prima vacacional.
+
+## Cuotas del IMSS que paga el trabajador
+
+<table>
+  <thead><tr><th>Concepto</th><th>Cuota</th><th>Fundamento</th></tr></thead>
+  <tbody>
+    {IMSS_OBRERO.map((c) => (
+      <tr><td>{c.nombre}</td><td>{c.porcentaje}%</td><td>{c.fundamento}</td></tr>
+    ))}
+  </tbody>
+</table>
+
+El excedente se calcula sobre lo que pase de {IMSS_UMBRAL_EXCEDENTE_UMA} UMA (**{dinero(v.uma.diaria * IMSS_UMBRAL_EXCEDENTE_UMA)}** diarios). El tope de cotización es de {IMSS_TOPE_UMA} UMA (**{dinero(v.uma.diaria * IMSS_TOPE_UMA)}** diarios).
+
+## ¿A quién aplica?
+
+A personas trabajadoras con sueldo e IMSS. No aplica a honorarios, al ISSSTE ni a otros regímenes. Supone que tu único ingreso es el sueldo que escribes.
+
+## Fundamento legal
+
+- **Ley del ISR, art. 96** y decreto del subsidio para el empleo.
+- **Ley del Seguro Social, arts. 25, 27 a 29, 36, 106, 107, 147 y 168**, y 19.º transitorio.
