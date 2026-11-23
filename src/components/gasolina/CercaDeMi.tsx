@@ -58,7 +58,7 @@ export default function CercaDeMi() {
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 id="cerca-titulo" class="text-xl font-bold tracking-tight">Gasolineras cerca de ti</h2>
-          <p class="mt-1 text-sm text-slate-600">Usamos tu ubicación solo en tu navegador; no la guardamos ni la enviamos.</p>
+          <p class="mt-1 text-sm text-slate-600">Calculamos las distancias en tu navegador y no guardamos tu ubicación. El mapa carga la zona desde OpenStreetMap.</p>
         </div>
         <button
           type="button"
